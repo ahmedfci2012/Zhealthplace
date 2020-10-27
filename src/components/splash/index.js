@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Image, ImageBackground, StatusBar, Dimensions } from "react-native";
 import { Container, Text } from "native-base";
 
  const { width, height } = Dimensions.get("window");
-export default function Splash() {   
-    return (
+export default function Splash({navigation}) {   
+    
+  useEffect (()=>{
+    timeoutHandle = setTimeout(()=>{
+      // Add your logic for the transition
+      navigation.replace("Login");
+ }, 5000);
+  })
+  return (
       <Container style={{
 
       }}>

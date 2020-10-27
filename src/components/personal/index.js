@@ -29,7 +29,6 @@ export default function Personal() {
         </Header>
 
 
-
         <View style={{
           marginTop:60,
           flexGrow:1,

@@ -5,7 +5,12 @@ import { Container, Text, Form, Item, Label, Input, Icon, Content, Button } from
  const { width, height } = Dimensions.get("window");
  //console.log(width);
 
-export default function Login() {   
+export default function Login({navigation}) { 
+  
+    const login = ()=>{
+      navigation.replace('Specialization');
+    }
+
     return (
       <Container style={{backgroundColor:'#003052'}}>
         <StatusBar backgroundColor="#003052" />
@@ -156,7 +161,7 @@ export default function Login() {
                     backgroundColor: "#003052",
                     borderRadius: 8
                   }}
-                  //onPress={this.login}
+                  onPress={login}
                   //disabled={disabled || !phone || !password}
                 >
                   <View
@@ -174,7 +179,9 @@ export default function Login() {
                 </Button>
               </View>
              
-             <TouchableOpacity>
+             <TouchableOpacity
+             onPress={()=>navigation.navigate("Register")}
+             >
               <View style={{
                 alignItems:'center',
                 marginTop:10,

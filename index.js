@@ -1,5 +1,7 @@
 import { registerRootComponent } from 'expo';
-
+import { preventAutoHideAsync, hideAsync } from 'expo-splash-screen';
+preventAutoHideAsync();
+hideAsync();
 import App from './App';
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
