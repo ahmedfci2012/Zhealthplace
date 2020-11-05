@@ -2,41 +2,19 @@ import React from "react";
 import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity} from "react-native";
 import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Thumbnail , Header, Left, Body, Right, Title, CardItem, Card} from "native-base";
 import { Rating, AirbnbRating } from 'react-native-ratings';
+import LoadingComponent from '../LoadingComponent';
+
+const URLPhysician="https://medicalapp-api.azurewebsites.net/api/Physician/Get/";
+import useFetch from "react-fetch-hook";
 
 const { width, height } = Dimensions.get("window");
-const data = [
-  {
-    clinicName:'عيادة الصفا',
-    doctorName:'دكتور محمد مصطفى كامل',
-    doctorDesvription:'أخصائي طب و جراحة الفم و الاسنان',
-    desc:'استشاري متخصص في امراض النساء والتوليد وعلاج تأخر الحمل عضو الجمعية الاوروبية للمناظير الجراحية لامراض',
-    cost:'سعر الكشف ٢٠٠ جنية'
-  },
-  {
-    clinicName:'مستشفي السلام',
-    doctorName:'دكتور احمد الشهاوي',
-    doctorDesvription:'اخصائي تجميل الاسنان',
-    desc:'استشاري متخصص في امراض النساء والتوليد وعلاج تأخر الحمل عضو الجمعية الاوروبية للمناظير الجراحية لامراض',
-    cost:'سعر الكشف ٢٠٠ جنية'
-  },
-  {
-    clinicName:'عيادة الصفا',
-    doctorName:'دكتورة أميرة متولي حسن',
-    doctorDesvription:'أخصائية علاج و تجميل الفم والأسنان',
-    desc:'استشاري متخصص في امراض النساء والتوليد وعلاج تأخر الحمل عضو الجمعية الاوروبية للمناظير الجراحية لامراض',
-    cost:'سعر الكشف ٢٠٠ جنية'
-  },
-  {
-    clinicName:'عيادة الصفا',
-    doctorName:'دكتورة أميرة متولي حسن',
-    doctorDesvription:'أخصائية علاج و تجميل الفم والأسنان',
-    desc:'استشاري متخصص في امراض النساء والتوليد وعلاج تأخر الحمل عضو الجمعية الاوروبية للمناظير الجراحية لامراض',
-    cost:'سعر الكشف ٢٠٠ جنية'
-  }
-]
+ 
 
-export default function Doctors({navigation}) {   
-    return (
+export default function Doctors({navigation, searchTerm}) {   
+    
+  const {isLoading, data} = useFetch(URLPhysician+searchTerm );
+
+  return (
 
       <View style={{
         flexGrow:1,
@@ -50,13 +28,15 @@ export default function Doctors({navigation}) {
       >
         
        
+        {isLoading ?  <LoadingComponent />
+        
+        :
+        <View>
 
-     {data.map( (item, index) =>
+        {data.map( (item, index) =>
        
        <TouchableOpacity key={index}
-       onPress={
-        ()=>navigation.navigate('Booking')
-       }
+        onPress={() => navigation.navigate('Booking', { item: item , clinicId:1})}
        >
        <View style={{
         //flex:1,
@@ -79,11 +59,19 @@ export default function Doctors({navigation}) {
             <View style={{  flexDirection:'row', alignItems:'center',justifyContent:'flex-end', width:'100%'}}>
               <View>
               <View style={{   marginRight:10, paddingLeft:5,}}>
-                <Text style={{ color:'#003052', fontWeight:'bold', fontSize:14}}>{item.doctorName} </Text>
+                <Text style={{ color:'#003052', fontWeight:'bold', fontSize:14, textAlign:'right'}}>
+                  {item.systemUser.firstName.replace(/(\r\n|\n|\r)/gm, "")} 
+                  {" "} 
+                  {item.systemUser.lastName.replace(/(\r\n|\n|\r)/gm, "")}
+                  </Text>
               </View> 
-              <View style={{   marginRight:10, paddingLeft:5,}}>
-              <Text style={{ color:'#A8A8A8',fontWeight:'600' ,fontSize:10}}>{item.doctorDesvription}</Text>
-              </View>
+              <View style={{ marginRight:10,marginLeft:10, paddingLeft:5,paddingRight:5}}>
+              <Text style={{ color:'#A8A8A8',fontWeight:'600' ,fontSize:10, textAlign:'right'}} numberOfLines={.5}> 
+                  {item.systemUser.firstName.replace(/(\r\n|\n|\r)/gm, "")}  
+                  {" "}
+                  {item.systemUser.lastName.replace(/(\r\n|\n|\r)/gm, "")}
+                  </Text>
+                 </View>
               </View>
               <View style={{}}>
                 <Icon type="MaterialCommunityIcons" name="stethoscope" style={{ fontSize:20, color:'#458E21'}} />
@@ -96,7 +84,7 @@ export default function Doctors({navigation}) {
 
             <View style={{  flexDirection:'row',justifyContent:'flex-end', width:'100%', marginTop:10}}>
               <View style={{ flex:1, marginRight:10, paddingLeft:5,}}>
-                <Text style={{ color:'#003052', fontWeight:'600', fontSize:13}} numberOfLines={3}>{item.desc}</Text>
+                <Text style={{ color:'#003052', fontWeight:'600', fontSize:13, textAlign:'right'}} numberOfLines={3}>{item.description}</Text>
               </View> 
               <View>
                 <Icon type="MaterialCommunityIcons" name="signature-freehand" style={{ fontSize:20, color:'#458E21'}} />
@@ -105,7 +93,7 @@ export default function Doctors({navigation}) {
 
            <View style={{  flexDirection:'row', alignItems:'center',justifyContent:'flex-end', width:'100%', marginTop:10}}>
               <View style={{ flex:1, marginRight:10, paddingLeft:5,}}>
-                <Text style={{ color:'#003052', fontWeight:'600', fontSize:10}}>{item.cost}</Text>
+                <Text style={{ color:'#003052', fontWeight:'600', fontSize:10, textAlign:'right'}}> سعر الكشف {item.consultationPrice} جنية</Text>
               </View> 
               <View>
               <Icon type="MaterialCommunityIcons" name="credit-card-outline" style={{ fontSize:20, color:'#458E21'}} />
@@ -119,7 +107,7 @@ export default function Doctors({navigation}) {
        
        
         <View style={{flex:1}}>
-        <Image  source={require("../assets/doctor.png")} 
+        <Image  source={{ uri: item.imageUrl}} 
          style={{ width:94, height:111}}
          resizeMode='contain'
         />
@@ -151,6 +139,8 @@ export default function Doctors({navigation}) {
 
       )} 
       
+      </View>
+        }
       </View>
     
     )}

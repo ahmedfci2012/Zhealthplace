@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity} from "react-native";
 import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Thumbnail , Header, Left, Body, Right, Title, CardItem, Card} from "native-base";
-import Footers from '../Footers';
 import Headers from './Headers';
 import Doctors from "./Doctors";
 import Clinics from "./Clinics";
@@ -9,16 +8,36 @@ import Clinics from "./Clinics";
  const { width, height } = Dimensions.get("window");
  //console.log(width);
 
-export default function Search({navigation}) {   
+export default function Search({  setfooter, navigation,route}) {   
     
-    const [tabDoctor, setTabDoctor] = useState(true); // true doctor false clincics
-    const [tabClinic, setTabClinic] = useState(false); // true doctor false clincics
+    setfooter(true);
+    const { specialization  } = route.params;
 
+    const [clinicCheck, changeCheckClinic] = useState(true);
+    const [doctorCheck, changeCheckDoctor] = useState(false);
+
+    const [searchTerm, setSearchTerm] = React.useState("");
+
+    const [isSearch, startSearch] = useState(false);
+
+    const onClickSearch = ()=>{
+      startSearch(true);
+    };
+
+    const search = (value)=>{
+      setSearchTerm(value);
+      startSearch(false);
+    }
+
+
+    const GoToSpecialization =()=>{
+      navigation.navigate('Specialization');
+    }
     return (
       <Container style={{backgroundColor:'#003052'}}>
         <StatusBar backgroundColor="#003052" />
         
-        <Headers title="اطباء اسنان" />
+        <Headers title={specialization} />
 
         <View
                 style={{
@@ -41,7 +60,9 @@ export default function Search({navigation}) {
                 <Button transparent style={{
                   alignItems:'flex-start',
                   justifyContent:'flex-start' 
-                }}>
+                }}
+                onPress={ GoToSpecialization}
+                >
                 <Icon
                  type="FontAwesome"
                  name="sliders"
@@ -55,11 +76,8 @@ export default function Search({navigation}) {
                   placeholder="ابحث عن التخصص المطلوب"
                   placeholderTextColor="#C9C9C9"
                   returnKeyType="next"
-                  // onSubmitEditing={() => {
-                  //   this.passwordInput._root.focus();
-                  // }}
-                  //onChangeText={phone => this.setState({ phone })}
-                  //value={phone}
+                  value={searchTerm} 
+                  onChangeText={ (value)=>search(value)}
                   keyboardType="default"
                   style={{ 
                         color: "#000" , 
@@ -68,12 +86,15 @@ export default function Search({navigation}) {
                 }}
                   //disabled={disabled}
                 />
-                <Icon
-                  name="search"
-                  type="MaterialIcons"
-                  style={{ color: "#C9C9C9" }}
-                />
+                <TouchableOpacity onPress={onClickSearch} >
+                  <Icon
+                    name="search"
+                    type="MaterialIcons"
+                    style={{ color: "#C9C9C9" }}
+                  />
+                </TouchableOpacity>
               </View>
+
               
 
          <View style={{
@@ -82,7 +103,7 @@ export default function Search({navigation}) {
     }}>
 
       <TouchableOpacity style={{flex:1,}} onPress={()=>{
-        setTabDoctor(true),setTabClinic(false)
+        changeCheckDoctor(true),changeCheckClinic(false)
       }}>
               <View>
                   <View style={{alignItems:'center'}}>
@@ -95,13 +116,13 @@ export default function Search({navigation}) {
                         </Text>
                   </View>
 
-                 <View style={{borderWidth:2, borderColor:tabDoctor?'#458E21':'#003052', marginLeft:18, marginBottom:23,marginTop:10}}/> 
+                 <View style={{borderWidth:2, borderColor:doctorCheck?'#458E21':'#003052', marginLeft:18, marginBottom:23,marginTop:10}}/> 
           
               </View>
       </TouchableOpacity>
           
       <TouchableOpacity style={{flex:1,}} onPress={()=>{
-        setTabDoctor(false),setTabClinic(true)
+        changeCheckDoctor(false),changeCheckClinic(true)
       }}>
       
               <View>
@@ -115,21 +136,32 @@ export default function Search({navigation}) {
                         </Text>
                   </View>
 
-                  <View style={{borderWidth:2, borderColor:tabClinic?'#458E21':'#003052', marginRight:18, marginBottom:23,marginTop:10}}/> 
+                  <View style={{borderWidth:2, borderColor:clinicCheck?'#458E21':'#003052', marginRight:18, marginBottom:23,marginTop:10}}/> 
           
               </View>
       </TouchableOpacity>
   </View>
         <Content contentContainerStyle={{ flexGrow: 1 }}>
 
-      {tabDoctor? <Doctors navigation={navigation}/> :null}
-      {tabClinic?<Clinics  navigation={navigation} />:null}
+      
+      {isSearch?
+        <View style={{flexGrow:1,}}>
+        {clinicCheck ?<Clinics navigation = {navigation}   searchTerm= { searchTerm } specialization ={specialization}/>:null}
+        {doctorCheck ?<Doctors navigation = {navigation}   searchTerm= { searchTerm } specialization ={specialization}/>:null}
+        </View> 
+        :
+     <View style={{flexGrow:1,}}>
+      {clinicCheck? <Clinics navigation = {navigation} searchTerm={""} specialization ={specialization} />:null}
+      {doctorCheck? <Doctors navigation = {navigation} searchTerm= {""} specialization ={specialization} />:null}
+      </View>
+      }
+
 
        
       </Content>
 
 
-        <Footers navigation={navigation}/>
+
 
       </Container>
     );

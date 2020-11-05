@@ -1,9 +1,17 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { preventAutoHideAsync, hideAsync } from 'expo-splash-screen';
+
+import thunk from 'redux-thunk';
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from 'redux';
+
+import reducer from "./src/reducers";
+
+
 import Splash from './src/components/splash';
 import Login from './src/components/login';
 import Register from './src/components/register';
@@ -12,77 +20,142 @@ import Appointments from './src/components/appointments';
 import Specialization from './src/components/specializations';
 import Search from './src/components/search';
 import Booking from './src/components/booking';
+import Verify from './src/components/verify';
 
+import Footers from './src/components/Footers';
+
+//const store = createStore(reducer);
+
+const store = createStore(
+  reducer,
+  applyMiddleware(  thunk )
+);
 
 
 const Stack = createStackNavigator();
 
 export default function App() {
  
+  const [footer, setfooter]= useState(true);
+  const navigation = React.useRef(); 
 
- 
-
-
-
-
-  
   return (
-    <NavigationContainer>
+
+    <Provider store={store}>
+      <NavigationContainer ref={navigation}>
       <Stack.Navigator>
       
-      <Stack.Screen name="Splash" component={Splash} 
+      <Stack.Screen name="Login" 
          options={{
           headerShown:false
         }}
-        />
+       >
+         {props=> <Login  {...props}  setfooter={setfooter}/>}
+        </Stack.Screen>
+
+
+      <Stack.Screen name="Register"  
+         options={{
+          headerShown:false
+        }}
+        >
+          {props=> <Register  {...props}  setfooter={setfooter}/>}
+        </Stack.Screen>
+
+
+
+      <Stack.Screen name="Verify"  
+         options={{
+          headerShown:false
+        }}
+        >
+          {props=> <Verify  {...props}  setfooter={setfooter}/>}
+        </Stack.Screen>      
         
-      <Stack.Screen name="Booking" component={Booking} 
-         options={{
-          headerShown:false
-        }}
-        />
-      <Stack.Screen name="Search" component={Search} 
-         options={{
-          headerShown:false
-        }}
-        />
         
-      <Stack.Screen name="Appointments" component={Appointments} 
-         options={{
-          headerShown:false
-        }}
-        />
 
       
-      <Stack.Screen name="Specialization" component={Specialization} 
+        
+     
+        
+      <Stack.Screen name="Splash"  
          options={{
           headerShown:false
         }}
-        />
+        >
+        {props=> <Splash  {...props}  setfooter={setfooter}/>}
+        </Stack.Screen>
+        
+      <Stack.Screen name="Specialization"  
+         options={{
+          headerShown:false
+        }}>
+        {props=> <Specialization  {...props}  setfooter={setfooter}/>}
+        </Stack.Screen>
+        
+      <Stack.Screen name="Search" 
+         options={{
+          headerShown:false
+        }}
+        >
+          {props=> <Search  {...props}  setfooter={setfooter}/>}
+           
+        </Stack.Screen>
+
+      
+        
+      
+
+
+      
+      <Stack.Screen name="Appointments"  
+         options={{
+          headerShown:false
+        }}
+        >
+          {props=> <Appointments  {...props}  setfooter={setfooter}/>}
+        </Stack.Screen>
+      
+        
+      <Stack.Screen name="Booking" 
+         options={{
+          headerShown:false
+        }}
+        >
+           {props=> <Booking  {...props}  setfooter={setfooter}/>}
+        </Stack.Screen>
+
+      
+        
+       
+      
+     
+
         
       
         
-      <Stack.Screen name="Register" component={Register} 
-         options={{
-          headerShown:false
-        }}
-        />
-      <Stack.Screen name="Login" component={Login} 
-         options={{
-          headerShown:false
-        }}
-        />
+    
 
-        <Stack.Screen name="Personal" component={Personal} 
+      
+
+        <Stack.Screen name="Personal"  
          options={{
           headerShown:false
         }}
-        />
+        >
+          {props=> <Personal  {...props}  setfooter={setfooter}/>}
         
-         
+        </Stack.Screen>
+        
+        
         
       </Stack.Navigator>
+     
+
+      {footer? <Footers navigation={navigation.current} />:null}
+
     </NavigationContainer>
+    </Provider>
   );
 }
 

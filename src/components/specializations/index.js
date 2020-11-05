@@ -1,17 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity} from "react-native";
 import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Thumbnail , Header, Left, Body, Right, Title, CardItem, Card} from "native-base";
-import Footers from '../Footers';
 import Headers from './Headers';
+import SpecList from './SpecList';
 
  const { width, height } = Dimensions.get("window");
  //console.log(width);
 
-export default function Specialization({navigation}) {   
+export default function Specialization({setfooter,navigation}) {   
 
-  const search = ()=>{
-    navigation.navigate('Search')
-  }
+  setfooter(true);
+  
+  //const { isLoading, data }  = useFetch( URLpecialization +"/"+ searchItem );
+  
+const [searchTerm, setSearchTerm] = React.useState("");
+
+const [isSearch, startSearch] = useState(false);
+
+const onClickSearch = ()=>{
+  startSearch(true);
+};
+
+const search = (value)=>{
+  setSearchTerm(value);
+  startSearch(false);
+}
+
+
+
+  // const OnClicItem = (item)=>{
+  //   navigation.navigate('Search', { specialization: item.name})
+  // }
 
     return (
       <Container style={{backgroundColor:'#003052'}}>
@@ -46,7 +65,8 @@ export default function Specialization({navigation}) {
                   // onSubmitEditing={() => {
                   //   this.passwordInput._root.focus();
                   // }}
-                  //onChangeText={phone => this.setState({ phone })}
+                  value={searchTerm} 
+                  onChangeText={ (value)=>search(value)}
                   //value={phone}
                   keyboardType="default"
                   style={{ 
@@ -56,68 +76,32 @@ export default function Specialization({navigation}) {
                 }}
                   //disabled={disabled}
                 />
-                <Icon
-                  name="search"
-                  type="MaterialIcons"
-                  style={{ color: "#C9C9C9" }}
-                />
+                <TouchableOpacity onPress={onClickSearch} >
+                  <Icon
+                    name="search"
+                    type="MaterialIcons"
+                    style={{ color: "#C9C9C9" }}
+                  />
+                </TouchableOpacity>
               </View>
               
 
         
        
-        <Content contentContainerStyle={{ flexGrow: 1 }}>
+    <Content contentContainerStyle={{ flexGrow: 1 }}>
        
-        <View style={{
-        flexGrow:1,
-        borderTopLeftRadius:45,
-        borderTopRightRadius:45,
-        borderColor:'#458E21',
-        backgroundColor:'#FFFFFF',
-        //alignItems:'center',
-        //padding:10,
-        paddingTop:35,
-        paddingRight:10
-      }}
-      >
-
-       
-<Item style={{flexDirection:'row', justifyContent:'flex-end', borderColor:'#E6E6E6', paddingTop:11, paddingBottom:11}} onPress={ search}>
-      
-      <Text   style={{
-        color:'#003052',
-        paddingRight:25,
-        paddingLeft:20,
-        fontSize:14,
-        fontWeight:'bold',
-        
-      }}>اسنان</Text>
-        
-        <Icon
-          name="teeth"
-          type="FontAwesome5"
-          style={{ color: "#458E21" }}
-        />
-
-      </Item> 
-
-      
-
-
-
-
-    
-
-      </View>
-       
+       {isSearch? 
+         <SpecList navigation = {navigation}   searchTerm= { searchTerm } />
          
-        
-        </Content>
+        :
+         <SpecList navigation = {navigation} searchTerm={""} />
+         
+        }
 
+  </Content>
 
-        <Footers navigation={navigation}/>
 
       </Container>
-    );
-  }
+    
 
+    )}

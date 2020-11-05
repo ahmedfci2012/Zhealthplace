@@ -6,9 +6,10 @@ const { width, height } = Dimensions.get("window");
  
 
 export default function Footers({navigation}) {  
-  
+    
+    
     const search = ()=>{
-      navigation.navigate('Search');
+      navigation.navigate('Specialization');
     }
     const profile = ()=>{
       navigation.navigate('Personal');
@@ -24,7 +25,7 @@ export default function Footers({navigation}) {
 
 <ImageBackground 
             source={require('./assets/footer.png')}
-           style={{height:62,flexDirection:'row' ,justifyContent:'center', backgroundColor:'#FFF'}}>
+           style={{ position:'relative', bottom:3, left:0,right:0 ,height:62,flexDirection:'row' ,justifyContent:'center', backgroundColor:'#FFF'}}>
             
             
             <View style={{flex:1,  flexDirection:'row', justifyContent:'space-around', backgroundColor:'#003052'}} >
@@ -100,8 +101,5 @@ export default function Footers({navigation}) {
               </View>
             </TouchableOpacity>      
            </View>
-
-
            </ImageBackground>
-
     )}

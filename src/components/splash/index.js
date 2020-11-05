@@ -3,9 +3,12 @@ import { View, Image, ImageBackground, StatusBar, Dimensions } from "react-nativ
 import { Container, Text } from "native-base";
 
  const { width, height } = Dimensions.get("window");
-export default function Splash({navigation}) {   
+export default function Splash({navigation, setfooter}) {   
     
-  useEffect (()=>{
+
+setfooter(false);
+
+useEffect (()=>{
     timeoutHandle = setTimeout(()=>{
       // Add your logic for the transition
       navigation.replace("Login");

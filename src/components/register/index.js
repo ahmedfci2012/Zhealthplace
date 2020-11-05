@@ -1,15 +1,85 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity} from "react-native";
-import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Picker } from "native-base";
+import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Picker, DatePicker } from "native-base";
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+import axios from 'react-native-axios';
 
  const { width, height } = Dimensions.get("window");
  //console.log(width);
 
-export default function Register({navigation}) { 
+export default function Register({navigation, setfooter}) { 
   
+    setfooter(false);
+
+    //const user = useSelector(state => state);
+     
+    const [fname, setFName] = useState("");
+    const [lname, setLName] = useState("");
+    const [email, setEmail] = useState("");
+    const [mobile, setMobile] = useState("");
+    const [password, setPassword] = useState("");
+    const [gender, chooseGenger] = useState("id1");
+    const [birthOfDate, setBirthOfDate] = useState("");
+    
+    const [validateMessage, setValidateMessage] = useState("انشاء حساب");
+  
+    console.log(fname,lname, email,mobile, password, gender, birthOfDate);
+
+    const validate = ()=>{
+      
+      if ( !fname ||!lname || !email || !mobile || !password  || !birthOfDate){
+        setValidateMessage(" يجب ادخال البيانات بشكل صحيح!")
+      } 
+      else {
+        setValidateMessage('انشاء حساب');
+        register();
+      }
+  }
+
+
     const register = ()=>{
-      navigation.replace('Login');
-    }
+      
+      let user =   {
+        "firstName": fname,
+        "middleName": "",
+        "lastName": lname,
+        "username": fname,
+        "password": password,
+        "dateOfBirth": birthOfDate,
+        "gender": gender=="id1"?"1":"2",
+        "homePhone": mobile,
+        "mobilePhone": mobile,
+        "emailAddress": email,
+        }
+
+      axios.post('https://medicalapp-api.azurewebsites.net/api/User/RegisterPatient', {
+      ...user
+      })
+   .then(function (response) {
+  
+   
+    console.log("out if ",response.data);
+    console.log("out if ", response.data.data);
+
+   if( response.data.isSuccessful){
+      console.log("in if ",response.data);
+      console.log("in if ", response.data.data);
+
+      setValidateMessage('انشاء حساب');
+      navigation.navigate('Verify', {
+        userId:response.data.data
+      });
+   } else {
+    setValidateMessage(response.data.errorMessage);
+   }
+   
+  
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+  }
 
     return (
       <Container style={{backgroundColor:'#003052'}}>
@@ -48,7 +118,7 @@ export default function Register({navigation}) {
               fontSize:25, 
               fontWeight:'bold'
             }}>
-              انشاء حساب
+              {validateMessage}
             </Text>
 
             <View style={{marginTop:15}}>
@@ -58,10 +128,6 @@ export default function Register({navigation}) {
             </View>
           </View>
 
-          
-
-        
-        
              
           <View style={{
             flex:1,
@@ -69,12 +135,16 @@ export default function Register({navigation}) {
             width:'80%'
           }}>
              
+           
+
+
+
              <Item floatingLabel style={{
                 //marginTop:25,
                 borderColor:'#003052'
               }}>
                 
-                <Label style={{marginRight:30, color:'#003052', fontSize:12}}>الاسم</Label>
+                <Label style={{marginRight:30, color:'#458E21', fontSize:12}}>الاسم الاول</Label>
                 <Icon
                  type="MaterialIcons"
                  name="person"
@@ -90,8 +160,40 @@ export default function Register({navigation}) {
                   // onSubmitEditing={() => {
                   //   this.passwordInput._root.focus();
                   // }}
-                  //onChangeText={phone => this.setState({ phone })}
-                  //value={phone}
+                  onChangeText={fname => setFName( fname )}
+                  value={fname}
+                  //secureTextEntry={true}
+                  
+                  style={{ color: "#003052", fontSize:15, textAlign:'right' , 
+                     
+                    }}
+                    
+                  //disabled={disabled}
+                />
+              </Item>
+              <Item floatingLabel style={{
+                marginTop:15,
+                borderColor:'#003052'
+              }}>
+                
+                <Label style={{marginRight:30, color:'#458E21', fontSize:12}}>الاسم الاخير</Label>
+                <Icon
+                 type="MaterialIcons"
+                 name="person"
+                 style={{ 
+                   color:'#458E21',
+                   paddingBottom:10
+                 }}
+                />
+                <Input
+                  //placeholder={strings("login.placeholder1")}
+                  //placeholderTextColor="#E1E1E180"
+                  returnKeyType="next"
+                  // onSubmitEditing={() => {
+                  //   this.passwordInput._root.focus();
+                  // }}
+                  onChangeText={lname => setLName( lname )}
+                  value={lname}
                   //secureTextEntry={true}
                   
                   style={{ color: "#003052", fontSize:15, textAlign:'right' , 
@@ -108,7 +210,7 @@ export default function Register({navigation}) {
                 borderColor:'#003052'
               }}>
                 
-                <Label style={{marginRight:30, color:'#003052', fontSize:12}}>البريد الاليكتروني</Label>
+                <Label style={{marginRight:30, color:'#458E21', fontSize:12}}>البريد الاليكتروني</Label>
                 <Icon
                  type="MaterialIcons"
                  name="email"
@@ -123,8 +225,8 @@ export default function Register({navigation}) {
                   // onSubmitEditing={() => {
                   //   this.passwordInput._root.focus();
                   // }}
-                  //onChangeText={phone => this.setState({ phone })}
-                  //value={phone}
+                  onChangeText={email => setEmail( email )}
+                  value={email}
                   //secureTextEntry={true}
                   
                   style={{ color: "#003052", fontSize:15, textAlign:'right' , 
@@ -142,7 +244,7 @@ export default function Register({navigation}) {
                 style={{ borderColor:'#003052' , marginTop:15,}}
               >
                 
-                <Label style={{marginRight:30, color:'#003052', fontSize:12}}>رقم الهاتف</Label>
+                <Label style={{marginRight:30, color:'#458E21', fontSize:12}}>رقم الهاتف</Label>
                 <Icon
                  type="AntDesign"
                  name="mobile1"
@@ -158,8 +260,8 @@ export default function Register({navigation}) {
                   // onSubmitEditing={() => {
                   //   this.passwordInput._root.focus();
                   // }}
-                  //onChangeText={phone => this.setState({ phone })}
-                  //value={phone}
+                  onChangeText={mobile => setMobile( mobile )}
+                  value={mobile}
                   keyboardType="phone-pad"
                   style={{ color: "#003052", fontSize:15, textAlign:'right' }}
                   //disabled={disabled}
@@ -171,7 +273,7 @@ export default function Register({navigation}) {
                 borderColor:'#003052'
               }}>
                 
-                <Label style={{marginRight:30, color:'#003052', fontSize:12}}>كلمة المرور</Label>
+                <Label style={{marginRight:30, color:'#458E21', fontSize:12}}>كلمة المرور</Label>
                 <Icon
                  type="FontAwesome5"
                  name="lock"
@@ -187,8 +289,8 @@ export default function Register({navigation}) {
                   // onSubmitEditing={() => {
                   //   this.passwordInput._root.focus();
                   // }}
-                  //onChangeText={phone => this.setState({ phone })}
-                  //value={phone}
+                  onChangeText={password => setPassword(password)}
+                  value={password}
                   secureTextEntry={true}
                   
                   style={{ color: "#003052", fontSize:15, textAlign:'right' , 
@@ -217,14 +319,13 @@ export default function Register({navigation}) {
               iosHeader="Select your SIM"
               //iosIcon={<Icon name="arrow-down" />}
               style={{ borderWidth:1,width:'80%', backgroundColor:'#FFF', marginRight:-50,
-              color: "#003052", fontSize:15, textAlign:'right'
+              color: "#458E21", fontSize:15, textAlign:'right'
             }}
-              //selectedValue={this.state.selected}
-              //onValueChange={this.onValueChange.bind(this)}
+              selectedValue={gender}
+              onValueChange={gender=>chooseGenger(gender)}
             >
-              <Picker.Item label="النوع" value="key0" />
-              <Picker.Item label="ذكر" value="key1" />
-              <Picker.Item label="انثي" value="key2" />
+              <Picker.Item label="ذكر" value="id1" />
+              <Picker.Item label="انثي" value="id2" />
             </Picker>
                
 
@@ -240,33 +341,45 @@ export default function Register({navigation}) {
               </Item>
 
 
-              <Item floatingLabel style={{
+              <View  style={{
                 marginTop:15,
-                borderColor:'#003052'
+                borderBottomWidth:.5,
+                borderBottomColor:'#003052',
+                flexDirection:'row',
+                justifyContent:'flex-end',
+                alignItems:'center'
+
               }}>
                 
-                <Label style={{marginRight:30, color:'#003052', fontSize:12}}>السن</Label>
-                <Icon
-                 type="MaterialCommunityIcons"
-                 name="calendar-month"
-                 style={{ 
-                   color:'#458E21',
-                   paddingBottom:12
-                 }}
-                />
-                <Input
-                  returnKeyType="next"
-                  // onSubmitEditing={() => {
-                  //   this.passwordInput._root.focus();
-                  // }}
-                  //onChangeText={phone => this.setState({ phone })}
-                  //value={phone}
+                
+
+                <DatePicker
+                  defaultDate={new Date(2020, 1, 1)}
+                  minimumDate={new Date(1950, 1, 1)}
+                  maximumDate={new Date(2020, 12, 31)}
+                  locale={"en"}
+                  timeZoneOffsetInMinutes={undefined}
+                  modalTransparent={false}
+                  animationType={"fade"}
+                  androidMode={"default"}
+                  placeHolderText="السن"
+                  textStyle={{ color: "#458E21" , textAlign:'right' }}
+                  placeHolderTextStyle={{ color: "#458E21" }}
+                  onDateChange={date=>setBirthOfDate(date)}
+                  disabled={false}
+                  />
+
+   
+
+                  <Icon
+                    type="MaterialCommunityIcons"
+                    name="calendar-month"
+                    style={{ 
+                      color:'#458E21',
+                    }}
+                  />
                   
-                  style={{ color: "#003052", fontSize:15, textAlign:'right'}}
-                  keyboardType="decimal-pad"
-                  //disabled={disabled}
-                />
-              </Item>
+              </View>
 
 
 
@@ -284,7 +397,7 @@ export default function Register({navigation}) {
                     backgroundColor: "#003052",
                     borderRadius: 8
                   }}
-                   onPress={register}
+                   onPress={validate}
                   //disabled={disabled || !phone || !password}
                 >
                   <View

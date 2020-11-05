@@ -1,41 +1,20 @@
 import React from "react";
 import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity} from "react-native";
 import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Thumbnail , Header, Left, Body, Right, Title, CardItem, Card} from "native-base";
+import LoadingComponent from '../LoadingComponent';
+import useFetch from "react-fetch-hook";
+import moment from "moment";
+const URLActive="https://medicalapp-api.azurewebsites.net/api/Visit/GetPatinetActiveVisits/2";
 
 const { width, height } = Dimensions.get("window");
-const data = [
-  {
-    clinicName:'عيادة الصفا',
-    doctorName:'دكتور محمد مصطفى كامل',
-    doctorDesvription:'أخصائي طب و جراحة الفم و الاسنان',
-    date:'الساعة ٠٩:٤٥',
-    call:true
-  },
-  {
-    clinicName:'مستشفي السلام',
-    doctorName:'دكتور احمد الشهاوي',
-    doctorDesvription:'اخصائي تجميل الاسنان',
-    date:'الساعة ٠٩:٤٥',
-    call:false
-  },
-  {
-    clinicName:'عيادة الصفا',
-    doctorName:'دكتورة أميرة متولي حسن',
-    doctorDesvription:'أخصائية علاج و تجميل الفم والأسنان',
-    date:'الساعة ٠٩:٤٥',
-    call:false
-  },
-  {
-    clinicName:'عيادة الصفا',
-    doctorName:'دكتورة أميرة متولي حسن',
-    doctorDesvription:'أخصائية علاج و تجميل الفم والأسنان',
-    date:'الساعة ٠٩:٤٥',
-    call:false
-  }
-]
+
 
 export default function AppointmentsNew() {   
-    return (
+    
+  const { isLoading, data } = useFetch( URLActive);
+
+
+  return (
 
       <View style={{
         flexGrow:1,
@@ -47,6 +26,10 @@ export default function AppointmentsNew() {
       }}
       >
         
+        {isLoading? <LoadingComponent/>:
+        
+        <View>
+
       <View style={{
         flexDirection:'row',
         justifyContent:'flex-end',
@@ -80,18 +63,22 @@ export default function AppointmentsNew() {
            paddingRight:15,
          }}>
            <View style={{ flexDirection:'row', alignItems:'center'}}>
-             <Text style={{ color:'#003052',  fontWeight:'900', marginRight:10}}>{item.clinicName}</Text>
+             <Text style={{ color:'#003052',  fontWeight:'900', marginRight:10}}>{item.clinic}</Text>
              <Icon type="FontAwesome5" name="clinic-medical" style={{ fontSize:20, color:'#003052'}} />
            </View>
            <View style={{ flexDirection:'row', alignItems:'center'}}>
               <View style={{ marginRight:10}}>
-                <Text style={{ color:'#003052', fontWeight:'900', fontSize:15}}>{item.doctorName}</Text>
-                <Text  style={{ color:'#A8A8A8',fontSize:12,  fontWeight:'900'}}  >{item.doctorDesvription}</Text>
+                <Text style={{ color:'#003052', fontWeight:'900', fontSize:15, textAlign:'right'}}>
+                  {item.physician.replace(/(\r\n|\n|\r)/gm, "")}
+                  </Text>
+                <Text  style={{ color:'#A8A8A8',fontSize:12,  fontWeight:'900'}}  > أخصائي طب و جراحة الفم و الاسنان </Text>
               </View> 
               <Icon type="MaterialCommunityIcons" name="stethoscope" style={{ fontSize:20, color:'#003052'}} />
            </View> 
            <View style={{ flexDirection:'row', alignItems:'center', marginTop:4}}>
-        <Text style={{ color:'#458E21',  fontWeight:'900', marginRight:10, fontSize:10}}>{item.date}</Text>
+        <Text style={{ color:'#458E21',  fontWeight:'900', marginRight:10, fontSize:10}}>
+        الساعة { moment(item.visitDateTime).format('LL') } - { moment(item.visitDateTime).format('HH:00') }.
+           </Text>
              <Icon type="MaterialIcons" name="watch-later" style={{ fontSize:20, color:'#458E21', fontSize:15}} />
            </View>
 
@@ -101,7 +88,7 @@ export default function AppointmentsNew() {
               <View style={{ height:"100%",width:'100%',borderRadius:20,backgroundColor: item.call?'#458E21':"#B2B2B2", flexDirection:'row', alignItems:'center',justifyContent:'center'}}>
                   <Icon type="SimpleLineIcons" name="phone" style={{ fontSize:20, color:'#FFF'}} />
                   <Text style={{ color:'#FFF',  fontWeight:'900', marginLeft:10}}>اتصال</Text>
-              </View>
+              </View> 
            </TouchableOpacity>
            </View>
         <View style={{flex:1}}>
@@ -116,6 +103,8 @@ export default function AppointmentsNew() {
 
       )} 
       
+      </View>
+}
       </View>
     
     )}

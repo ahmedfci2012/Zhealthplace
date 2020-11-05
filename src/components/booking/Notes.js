@@ -6,7 +6,7 @@ import { Rating, AirbnbRating } from 'react-native-ratings';
 const { width, height } = Dimensions.get("window");
 
 
-export default function Notes() {   
+export default function Notes({confirm, setComment, comment}) {   
     return (
 
       <View style={{
@@ -20,12 +20,15 @@ export default function Notes() {
       >
         
        
-        <Textarea rowSpan={5} bordered
-        placeholder="ملاحظات"
-        style={{
-          textAlign:'right',
-          borderRadius:12
-        }}
+        <Textarea rowSpan={5} 
+            bordered
+            placeholder="ملاحظات"
+            value={comment}
+            onChangeText={setComment}            
+            style={{
+              textAlign:'right',
+              borderRadius:12
+            }}
  />
 
         <View
@@ -42,7 +45,7 @@ export default function Notes() {
                     backgroundColor: "#003052",
                     borderRadius: 8
                   }}
-                  //onPress={this.login}
+                  onPress={confirm}
                   //disabled={disabled || !phone || !password}
                 >
                   <View

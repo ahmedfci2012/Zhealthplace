@@ -9,8 +9,10 @@ import AppointmentsOld from "./AppointmentsOld";
  const { width, height } = Dimensions.get("window");
  //console.log(width);
 
-export default function Appointments({navigation}) {   
+export default function Appointments({setfooter, navigation}) {   
 
+  setfooter(true);
+  
   const [tabNew, setTabNew] = useState(true); // true doctor false clincics
   const [tabOld, setTabOld] = useState(false); // true doctor false clincics
 
@@ -74,7 +76,7 @@ export default function Appointments({navigation}) {
         </Content>
 
 
-        <Footers navigation={navigation}/>
+        {/* <Footers navigation={navigation}/> */}
 
       </Container>
     );

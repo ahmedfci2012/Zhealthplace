@@ -1,14 +1,24 @@
 import React from "react";
 import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity} from "react-native";
 import { Container, Text, Form, Item, Label, Input, Icon, Content, Button } from "native-base";
+import { useSelector, useDispatch } from "react-redux";
+import {userlogin} from '../../actions/login';
 
  const { width, height } = Dimensions.get("window");
  //console.log(width);
 
-export default function Login({navigation}) { 
+export default function Login({setfooter,navigation}) { 
   
-    const login = ()=>{
-      navigation.replace('Specialization');
+  setfooter(false);
+
+  
+  const dispatch = useDispatch();
+
+  const login = ()=>{
+      //navigation.replace('Specialization');
+
+      //dispatch( userlogin("01010342753", "20120027"));
+
     }
 
     return (
@@ -161,7 +171,7 @@ export default function Login({navigation}) {
                     backgroundColor: "#003052",
                     borderRadius: 8
                   }}
-                  onPress={login}
+                  onPress={() => dispatch(userlogin("01010342753", "20120027"))}
                   //disabled={disabled || !phone || !password}
                 >
                   <View

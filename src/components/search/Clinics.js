@@ -2,26 +2,19 @@ import React from "react";
 import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity} from "react-native";
 import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Thumbnail , Header, Left, Body, Right, Title, CardItem, Card} from "native-base";
 import { Rating, AirbnbRating } from 'react-native-ratings';
+import LoadingComponent from '../LoadingComponent';
+
+import useFetch from "react-fetch-hook";
+
+const URLClinics = "https://medicalapp-api.azurewebsites.net/api/Clinic/Get/";
 
 const { width, height } = Dimensions.get("window");
-const data = [
-  {
-    clinicName:'عيادات دبي لطب الاسنان',
-    
-  },
-  {
-    clinicName:'عيادات الرحمه للاسنان',
-    },
-  {
-    clinicName:'عيادات السلام للاسنان',
-    },
-  {
-    clinicName:'مركو الاسنان العالمي',
-    }
-]
 
-export default function Clinics() {   
-    return (
+export default function Clinics({navigation ,searchTerm}) {   
+  
+  const { isLoading, data } = useFetch(URLClinics+searchTerm);
+
+  return (
 
       <View style={{
         flexGrow:1,
@@ -30,22 +23,24 @@ export default function Clinics() {
         borderColor:'#458E21',
         backgroundColor:'#FFFFFF',
         //alignItems:'center',
-        padding:10,
+        padding:10
       }}
       >
         
-       
-
-     {data.map( (item, index) =>
-       <View style={{
-        //flex:1,
-        flexDirection:'row',
-        marginTop:15, 
-        borderWidth:.5,
-        borderRadius:10,
-        paddingBottom:3,
-        borderColor:'#70707080',
-      }}  key={index}>
+        {isLoading ?  <LoadingComponent />
+        
+        :
+        <View>
+        {data.map( (item, index) =>
+          <View style={{
+            //flex:1,
+            flexDirection:'row',
+            marginTop:15, 
+            borderWidth:1,
+            borderRadius:10,
+            paddingBottom:3,
+            borderColor:'#70707080',
+          }}  key={index}>
 
 
          <View style={{
@@ -58,7 +53,7 @@ export default function Clinics() {
             <View style={{  flexDirection:'row', alignItems:'center',justifyContent:'flex-end', width:'100%', marginRight:20}}>
               <View >
               <View style={{   marginRight:10, paddingLeft:5,width:150,maxWidth:150}}>
-                <Text style={{ color:'#003052', fontWeight:'bold', fontSize:14}} numberOfLines={1} >{item.clinicName} </Text>
+                <Text style={{ color:'#003052', fontWeight:'bold', fontSize:14, textAlign:'right'}} numberOfLines={1} >{item.registeredName} </Text>
               </View> 
 
               
@@ -103,18 +98,16 @@ export default function Clinics() {
         </View>
        
        
-        <View style={{ justifyContent:'center', alignItems:'center'}}>
-            <Image  source={require("../assets/clinic.png")} 
+        <View style={{ justifyContent:'center', alignItems:'center', padding:5}}>
+            <Image  source={{ uri: item.imageUrl}}
             style={{ width:88, height:88}}
             resizeMode='contain'
             />
         </View>
       </View>
-  
- 
-
       )} 
-      
+      </View>
+}
       </View>
     
     )}

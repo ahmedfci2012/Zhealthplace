@@ -2,16 +2,17 @@ import React from "react";
 import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity} from "react-native";
 import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Picker , Header, Left, Body, Right, Title} from "native-base";
 
+
+
+
  const { width, height } = Dimensions.get("window");
  //console.log(width);
 
-export default function Personal() {   
+export default function Personal({  setfooter, navigation}) {   
+  setfooter(true);
     return (
       <Container style={{backgroundColor:'#003052'}}>
         <StatusBar backgroundColor="#003052" />
-        
-        <Content contentContainerStyle={{ flexGrow: 1 }}>
-
         <Header transparent>
           <Left>
           <Button transparent>
@@ -28,6 +29,9 @@ export default function Personal() {
           </Right>
         </Header>
 
+        <Content contentContainerStyle={{ flexGrow: 1  }}>
+
+        
 
         <View style={{
           marginTop:60,
@@ -37,7 +41,8 @@ export default function Personal() {
           borderTopRightRadius:45,
           borderColor:'#458E21',
           backgroundColor:'#FFFFFF',
-          alignItems:'center'
+          alignItems:'center',
+          paddingBottom:50,
         }}
         >
           <View style={{
@@ -270,6 +275,7 @@ export default function Personal() {
         </View>
         
         </Content>
+
       </Container>
     );
   }
