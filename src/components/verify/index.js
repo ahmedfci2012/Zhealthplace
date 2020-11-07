@@ -8,8 +8,7 @@ import axios from 'react-native-axios';
 
 export default function Verify({navigation, setfooter, route}) { 
   
-    setfooter(false);
- 
+    
     const [code , setCode] = useState("");
     const { userId  } = route.params;
 

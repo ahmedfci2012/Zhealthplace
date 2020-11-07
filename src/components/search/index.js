@@ -10,9 +10,8 @@ import Clinics from "./Clinics";
 
 export default function Search({  setfooter, navigation,route}) {   
     
-    setfooter(true);
-    const { specialization  } = route.params;
-
+    const { specialization, specializationId   } = route.params;
+    
     const [clinicCheck, changeCheckClinic] = useState(true);
     const [doctorCheck, changeCheckDoctor] = useState(false);
 
@@ -37,7 +36,7 @@ export default function Search({  setfooter, navigation,route}) {
       <Container style={{backgroundColor:'#003052'}}>
         <StatusBar backgroundColor="#003052" />
         
-        <Headers title={specialization} />
+        <Headers title={specialization} GoToSpecialization={GoToSpecialization} />
 
         <View
                 style={{
@@ -146,13 +145,13 @@ export default function Search({  setfooter, navigation,route}) {
       
       {isSearch?
         <View style={{flexGrow:1,}}>
-        {clinicCheck ?<Clinics navigation = {navigation}   searchTerm= { searchTerm } specialization ={specialization}/>:null}
-        {doctorCheck ?<Doctors navigation = {navigation}   searchTerm= { searchTerm } specialization ={specialization}/>:null}
+        {clinicCheck ?<Clinics navigation = {navigation}   searchTerm= { searchTerm } specialization ={specialization} specialId={specializationId}/>:null}
+        {doctorCheck ?<Doctors navigation = {navigation}   searchTerm= { searchTerm } specialization ={specialization} specialId={specializationId}/>:null}
         </View> 
         :
      <View style={{flexGrow:1,}}>
-      {clinicCheck? <Clinics navigation = {navigation} searchTerm={""} specialization ={specialization} />:null}
-      {doctorCheck? <Doctors navigation = {navigation} searchTerm= {""} specialization ={specialization} />:null}
+      {clinicCheck? <Clinics navigation = {navigation} searchTerm={""} specialization ={specialization} specialId={specializationId}/>:null}
+      {doctorCheck? <Doctors navigation = {navigation} searchTerm= {""} specialization ={specialization} specialId={specializationId}/>:null}
       </View>
       }
 

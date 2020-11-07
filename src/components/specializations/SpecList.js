@@ -18,7 +18,7 @@ export default function SpecList({navigation, searchTerm}) {
 
 
   const onClicItem = (item)=>{
-    navigation.navigate('Search', { specialization: item.name})
+    navigation.navigate('Search', { specialization: item.name,specializationId: item.id})
   }
 
     return (
@@ -35,7 +35,8 @@ export default function SpecList({navigation, searchTerm}) {
             //alignItems:'center',
             //padding:10,
             paddingTop:35,
-            paddingRight:10
+            paddingRight:20,
+            paddingBottom:35,
           }}
         >      
 

@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity} from "react-native";
 import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Picker , Header, Left, Body, Right, Title} from "native-base";
+import { useSelector } from "react-redux";
 
 
 
@@ -9,13 +10,21 @@ import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Picke
  //console.log(width);
 
 export default function Personal({  setfooter, navigation}) {   
-  setfooter(true);
-    return (
+
+   const user = useSelector(state => state.user);
+
+    const [fname, setFName] = useState(user.firstName);
+    const [lname, setLName] = useState(user.lastName);
+    const [email, setEmail] = useState(user.email);
+    const [mobile, setMobile] = useState(user.mobile);
+    const [password, setPassword] = useState("");
+    
+  return (
       <Container style={{backgroundColor:'#003052'}}>
         <StatusBar backgroundColor="#003052" />
         <Header transparent>
           <Left>
-          <Button transparent>
+          <Button transparent onPress={()=>alert("work on it ")}>
               <Icon name='playlist-edit' type="MaterialCommunityIcons"/>
             </Button>
           </Left>
@@ -23,7 +32,7 @@ export default function Personal({  setfooter, navigation}) {
             <Title>الملف الشخصي</Title>
           </Body>
           <Right>
-          <Button transparent>
+          <Button transparent onPress={()=>navigation.navigate("Specialization")}>
               <Icon name='arrow-right' type="MaterialCommunityIcons" />
             </Button>
           </Right>
@@ -76,7 +85,7 @@ export default function Personal({  setfooter, navigation}) {
                 borderColor:'#003052'
               }}>
                  
-                <Label style={{marginRight:30, color:'#458E21', fontSize:12}}>الاسم</Label>
+                <Label style={{marginRight:30, color:'#458E21', fontSize:12}}>الاسم الاول</Label>
                 <Icon
                  type="MaterialIcons"
                  name="person"
@@ -92,8 +101,8 @@ export default function Personal({  setfooter, navigation}) {
                   // onSubmitEditing={() => {
                   //   this.passwordInput._root.focus();
                   // }}
-                  //onChangeText={phone => this.setState({ phone })}
-                  //value={phone}
+                  onChangeText={fname => setFName( fname )}
+                  value={fname}
                   //secureTextEntry={true}
                   
                   style={{ color: "#003052", fontSize:15, textAlign:'right' , 
@@ -104,6 +113,38 @@ export default function Personal({  setfooter, navigation}) {
                 />
               </Item>
 
+
+              <Item floatingLabel style={{
+                marginTop:15,
+                borderColor:'#003052'
+              }}>
+                
+                <Label style={{marginRight:30, color:'#458E21', fontSize:12}}>الاسم الاخير</Label>
+                <Icon
+                 type="MaterialIcons"
+                 name="email"
+                 style={{ 
+                   color:'#458E21'
+                 }}
+                />
+                <Input
+                  //placeholder={strings("login.placeholder1")}
+                  //placeholderTextColor="#E1E1E180"
+                  returnKeyType="next"
+                  // onSubmitEditing={() => {
+                  //   this.passwordInput._root.focus();
+                  // }}
+                  onChangeText={lname => setLName( lname)}
+                  value={lname}
+                  //secureTextEntry={true}
+                  
+                  style={{ color: "#003052", fontSize:15, textAlign:'right' , 
+                     
+                    }}
+                    keyboardType="email-address"
+                  //disabled={disabled}
+                />
+              </Item>
 
               <Item floatingLabel style={{
                 marginTop:15,
@@ -125,8 +166,8 @@ export default function Personal({  setfooter, navigation}) {
                   // onSubmitEditing={() => {
                   //   this.passwordInput._root.focus();
                   // }}
-                  //onChangeText={phone => this.setState({ phone })}
-                  //value={phone}
+                  onChangeText={email => setEmail( email)}
+                  value={lname}
                   //secureTextEntry={true}
                   
                   style={{ color: "#003052", fontSize:15, textAlign:'right' , 
@@ -136,6 +177,7 @@ export default function Personal({  setfooter, navigation}) {
                   //disabled={disabled}
                 />
               </Item>
+
 
 
              
@@ -160,8 +202,8 @@ export default function Personal({  setfooter, navigation}) {
                   // onSubmitEditing={() => {
                   //   this.passwordInput._root.focus();
                   // }}
-                  //onChangeText={phone => this.setState({ phone })}
-                  //value={phone}
+                  onChangeText={mobile => setMobile({ mobile })}
+                  value={mobile}
                   keyboardType="phone-pad"
                   style={{ color: "#003052", fontSize:15, textAlign:'right' }}
                   //disabled={disabled}
@@ -183,7 +225,6 @@ export default function Personal({  setfooter, navigation}) {
                  }}
                 />
                 <Input
-                  //placeholder={strings("login.placeholder1")}
                   //placeholderTextColor="#E1E1E180"
                   returnKeyType="next"
                   // onSubmitEditing={() => {
@@ -202,7 +243,7 @@ export default function Personal({  setfooter, navigation}) {
 
 
 
-              <Item style={{
+              {/* <Item style={{
                 marginTop:15,
                 borderColor:'#003052'
               }}>
@@ -242,7 +283,7 @@ export default function Personal({  setfooter, navigation}) {
               </Item>
 
 
-              <Item floatingLabel style={{
+              <Item floatingLabel style={{ 
                 marginTop:15,
                 borderColor:'#003052'
               }}>
@@ -269,7 +310,7 @@ export default function Personal({  setfooter, navigation}) {
                   //disabled={disabled}
                 />
               </Item>
-              
+             */} 
              </View>
         
         </View>

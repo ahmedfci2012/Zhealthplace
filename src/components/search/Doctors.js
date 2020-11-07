@@ -4,16 +4,19 @@ import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Thumb
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import LoadingComponent from '../LoadingComponent';
 
-const URLPhysician="https://medicalapp-api.azurewebsites.net/api/Physician/Get/";
 import useFetch from "react-fetch-hook";
 
 const { width, height } = Dimensions.get("window");
  
 
-export default function Doctors({navigation, searchTerm}) {   
-    
-  const {isLoading, data} = useFetch(URLPhysician+searchTerm );
+export default function Doctors({navigation, searchTerm, specialId}) {   
+      
+  //console.log(searchTerm, specialId);
+  const URLPhysician = "https://medicalapp-api.azurewebsites.net/api/Physician/GetPhysiciansBySpecialisations/"+specialId;
+  const URLPhysicianSearch = "https://medicalapp-api.azurewebsites.net/api/Physician/GetPhysiciansBySpecialisationAndName?specialisationID="+specialId+"&name="+searchTerm;
+  const { isLoading, data } = useFetch( searchTerm?URLPhysicianSearch :URLPhysician);
 
+  
   return (
 
       <View style={{

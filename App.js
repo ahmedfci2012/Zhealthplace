@@ -8,6 +8,11 @@ import { preventAutoHideAsync, hideAsync } from 'expo-splash-screen';
 import thunk from 'redux-thunk';
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from 'redux';
+//import storage from 'redux-persist/lib/storage';
+import { persistStore, persistReducer } from 'redux-persist';
+import AsyncStorage from '@react-native-community/async-storage';
+import { PersistGate } from 'redux-persist/lib/integration/react';
+import logger from 'redux-logger';
 
 import reducer from "./src/reducers";
 
@@ -24,27 +29,48 @@ import Verify from './src/components/verify';
 
 import Footers from './src/components/Footers';
 
-//const store = createStore(reducer);
+//////
+const persistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+};
+const persistedReducer = persistReducer(persistConfig, reducer);
 
 const store = createStore(
-  reducer,
-  applyMiddleware(  thunk )
+  persistedReducer,
+  applyMiddleware(  thunk , logger)
 );
+
+const persistor = persistStore(store);
+///////
+
+// const store = createStore(
+//   reducer,
+//   applyMiddleware(  thunk )
+// );
 
 
 const Stack = createStackNavigator();
 
 export default function App() {
  
-  const [footer, setfooter]= useState(true);
+  const [footer, setfooter]= useState(false);
   const navigation = React.useRef(); 
 
   return (
 
     <Provider store={store}>
-      <NavigationContainer ref={navigation}>
+        <PersistGate loading={null} persistor={persistor}>
+          <NavigationContainer ref={navigation}>
       <Stack.Navigator>
-      
+      <Stack.Screen name="Splash"  
+         options={{
+          headerShown:false
+        }}
+        >
+        {props=> <Splash  {...props}  setfooter={setfooter}/>}
+        </Stack.Screen>
+
       <Stack.Screen name="Login" 
          options={{
           headerShown:false
@@ -78,13 +104,7 @@ export default function App() {
         
      
         
-      <Stack.Screen name="Splash"  
-         options={{
-          headerShown:false
-        }}
-        >
-        {props=> <Splash  {...props}  setfooter={setfooter}/>}
-        </Stack.Screen>
+      
         
       <Stack.Screen name="Specialization"  
          options={{
@@ -155,6 +175,7 @@ export default function App() {
       {footer? <Footers navigation={navigation.current} />:null}
 
     </NavigationContainer>
+        </PersistGate>
     </Provider>
   );
 }

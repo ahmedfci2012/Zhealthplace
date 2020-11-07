@@ -6,32 +6,35 @@ const LOGOUT = 'LOGOUT';
  * @param  {Object} state
  * @param  {Object} action
  */
-const user = (state = {
-    expiry:null,
-    id:null,
-    token: null ,
-    isLoggedIn: false,
-    name:null,
+const user = (state = 
+  {
+    userID:null,
+    mobile: null ,
+    lastName: null,
+    firstName:null,
     email:null
-  }, action) => {
+  }
+  
+  , action) => {
   switch (action.type) {
     case LOGIN:
+      console.log("action", action.data.userID);
       return {
         ...state,
-        id:action.data.id,
-        name:action.data.name,
+        userID:action.data.userID,
+        mobile:action.data.mobile,
         email:action.data.email,
-        isLoggedIn:true,
-        expiry: action.data.expiry,
-        token: action.data.token,
+        lastName: action.data.lastName,
+        firstName: action.data.firstName,
       };
     case LOGOUT:
       return {
         ...state,
-        expiry:null,
-        id:null,
-        token: null ,
-        isLoggedIn: false ,
+        userID:null,
+        mobile: null ,
+        lastName: null,
+        firstName:null,
+        email:null
       };
     default:
       return state;

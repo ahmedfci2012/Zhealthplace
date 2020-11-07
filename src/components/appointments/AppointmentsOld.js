@@ -7,12 +7,12 @@ import moment from "moment";
 import LoadingComponent from '../LoadingComponent';
 
 const { width, height } = Dimensions.get("window");
-const URLHistoric="https://medicalapp-api.azurewebsites.net/api/Visit/GetPatinetHistoryVisits/2";
 
-export default function AppointmentsNew() {   
-    
+
+export default function AppointmentsNew({patientId}) {   
+  const URLHistoric="https://medicalapp-api.azurewebsites.net/api/Visit/GetPatinetHistoryVisits/"+patientId;
   const { isLoading, data }  = useFetch( URLHistoric);
-
+   
   return (
  
      

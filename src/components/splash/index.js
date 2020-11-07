@@ -1,17 +1,21 @@
 import React, { useEffect } from "react";
 import { View, Image, ImageBackground, StatusBar, Dimensions } from "react-native";
 import { Container, Text } from "native-base";
+import { shallowEqual, useSelector } from 'react-redux'
 
  const { width, height } = Dimensions.get("window");
 export default function Splash({navigation, setfooter}) {   
     
-
-setfooter(false);
-
+const user = useSelector(state => state.user);
+ 
 useEffect (()=>{
+ 
     timeoutHandle = setTimeout(()=>{
       // Add your logic for the transition
-      navigation.replace("Login");
+      console.log(user.userID);
+      if(user.userID){navigation.replace("Specialization");}
+      else {navigation.replace("Login");}
+      
  }, 5000);
   })
   return (

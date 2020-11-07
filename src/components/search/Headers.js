@@ -5,7 +5,7 @@ import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Thumb
 const { width, height } = Dimensions.get("window");
  
 
-export default function Headers({title}) {   
+export default function Headers({title, GoToSpecialization }) {   
     return (
 <Header transparent>
           <Left>
@@ -15,7 +15,7 @@ export default function Headers({title}) {
             <Title style={{ color:"#FFF"}}>{title}</Title>
           </Body>
           <Right>
-          <Button transparent>
+          <Button transparent onPress={GoToSpecialization}>
               <Icon name='arrow-right' type="MaterialCommunityIcons" 
                 style={{color:'#FFF'}}
               />

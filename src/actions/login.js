@@ -9,7 +9,7 @@ export const login = (data) => ({
   data:data,
 });
 
-const send_data = (username , password  ) => dispatch => {
+const send_data = (username , password , setValidateMessage, successLogin ) => dispatch => {
    
   return axios.post('https://medicalapp-api.azurewebsites.net/api/User/Login/',
   {
@@ -19,14 +19,19 @@ const send_data = (username , password  ) => dispatch => {
   
 )
   .then(function (response) {
-    //console.log(username , password);
-    //console.log(response.data); 
-    //console.log(response.data);
-    // if(response.data.state==="OK"){ 
-    // dispatch(login(response.data));
+    
+    if (response.data.errorMessage && !response.data.isSuccessful){
+      console.log(response.data.errorMessage);
+      setValidateMessage("بيانات تسجيل الدخول خاطئة");
+    }
+    else if (response.data.data && response.data.isSuccessful){
+      //console.log(response.data.data);
+           dispatch(login(response.data.data));
+           successLogin();
+    }
 
-    // }
-    console.log(response);
+   
+
   })
   .catch(function (error) {
     console.log(error);
@@ -34,7 +39,7 @@ const send_data = (username , password  ) => dispatch => {
 
 }
 
-export const userlogin = ( username, password ) => dispatch => {
+export const userlogin = ( username, password, setValidateMessage, successLogin ) => dispatch => {
   //console.log(username, password);
- return dispatch(send_data( username, password ));
+ return dispatch(send_data( username, password , setValidateMessage, successLogin));
 };

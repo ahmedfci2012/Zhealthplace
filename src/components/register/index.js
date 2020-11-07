@@ -10,9 +10,7 @@ import axios from 'react-native-axios';
 
 export default function Register({navigation, setfooter}) { 
   
-    setfooter(false);
-
-    //const user = useSelector(state => state);
+     
      
     const [fname, setFName] = useState("");
     const [lname, setLName] = useState("");
@@ -24,7 +22,7 @@ export default function Register({navigation, setfooter}) {
     
     const [validateMessage, setValidateMessage] = useState("انشاء حساب");
   
-    console.log(fname,lname, email,mobile, password, gender, birthOfDate);
+    //console.log(fname,lname, email,mobile, password, gender, birthOfDate);
 
     const validate = ()=>{
       

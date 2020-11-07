@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity} from "react-native";
 import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Thumbnail , Header, Left, Body, Right, Title, CardItem, Card} from "native-base";
 import Headers from './Headers';
@@ -9,9 +9,9 @@ import SpecList from './SpecList';
 
 export default function Specialization({setfooter,navigation}) {   
 
-  setfooter(true);
-  
-  //const { isLoading, data }  = useFetch( URLpecialization +"/"+ searchItem );
+  useEffect (()=>{
+   setfooter(true);
+  })
   
 const [searchTerm, setSearchTerm] = React.useState("");
 
@@ -89,14 +89,12 @@ const search = (value)=>{
         
        
     <Content contentContainerStyle={{ flexGrow: 1 }}>
-       
-       {isSearch? 
-         <SpecList navigation = {navigation}   searchTerm= { searchTerm } />
-         
-        :
-         <SpecList navigation = {navigation} searchTerm={""} />
-         
-        }
+        
+         {isSearch? 
+         <SpecList navigation = {navigation}   searchTerm= { searchTerm } />:
+         <SpecList navigation = {navigation} searchTerm="" />
+         }
+ 
 
   </Content>
 

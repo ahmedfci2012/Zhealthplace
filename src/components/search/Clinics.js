@@ -6,13 +6,16 @@ import LoadingComponent from '../LoadingComponent';
 
 import useFetch from "react-fetch-hook";
 
-const URLClinics = "https://medicalapp-api.azurewebsites.net/api/Clinic/Get/";
+
 
 const { width, height } = Dimensions.get("window");
 
-export default function Clinics({navigation ,searchTerm}) {   
-  
-  const { isLoading, data } = useFetch(URLClinics+searchTerm);
+export default function Clinics({navigation ,searchTerm, specialId}) {   
+   
+const URLClinics = "https://medicalapp-api.azurewebsites.net/api/Clinic/GetClinicsBySpecialisations/"+specialId;
+const URLClinicsSearch = "https://medicalapp-api.azurewebsites.net/api/Clinic/GetClinicsBySpecialisationAndName?specialisationID="+specialId+"&name="+searchTerm;
+const { isLoading, data } = useFetch( searchTerm?URLClinicsSearch :URLClinics);
+
 
   return (
 

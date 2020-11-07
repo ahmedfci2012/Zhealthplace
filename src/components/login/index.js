@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity} from "react-native";
 import { Container, Text, Form, Item, Label, Input, Icon, Content, Button } from "native-base";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,12 +14,40 @@ export default function Login({setfooter,navigation}) {
   
   const dispatch = useDispatch();
 
+  const [mobile, setMobile] = useState("");
+  const [password, setPassword] = useState("");
+  const [validateMessage, setValidateMessage] = useState("تسجيل الدخول");
+  
+  const writeMobile = (mobile)=>{
+    setValidateMessage("تسجيل الدخول");
+    setMobile(mobile);
+  }
+  const writePassword = (password)=>{
+    setValidateMessage("تسجيل الدخول");
+    setPassword(password);
+  }
+
   const login = ()=>{
       //navigation.replace('Specialization');
 
       //dispatch( userlogin("01010342753", "20120027"));
-
+       dispatch(userlogin(mobile, password, setValidateMessage, successLogin));
     }
+
+    const validate = ()=>{
+      
+      if ( !mobile || !password ){
+        setValidateMessage(" يجب ادخال البيانات بشكل صحيح!")
+      } 
+      else {
+        setValidateMessage('تسجيل الدخول');
+        login();
+      }
+  }
+
+  const successLogin = ()=>{
+     navigation.navigate("Specialization")
+  }
 
     return (
       <Container style={{backgroundColor:'#003052'}}>
@@ -55,7 +83,7 @@ export default function Login({setfooter,navigation}) {
               fontSize:25, 
               fontWeight:'bold'
             }}>
-              تسجيل الدخول
+              {validateMessage}
             </Text>
           </View>
         
@@ -85,8 +113,8 @@ export default function Login({setfooter,navigation}) {
                   // onSubmitEditing={() => {
                   //   this.passwordInput._root.focus();
                   // }}
-                  //onChangeText={phone => this.setState({ phone })}
-                  //value={phone}
+                  onChangeText={mobile => writeMobile( mobile )}
+                  value={mobile}
                   keyboardType="phone-pad"
                   style={{ color: "#003052", fontSize:15, textAlign:'right' }}
                   //disabled={disabled}
@@ -114,8 +142,8 @@ export default function Login({setfooter,navigation}) {
                   // onSubmitEditing={() => {
                   //   this.passwordInput._root.focus();
                   // }}
-                  //onChangeText={phone => this.setState({ phone })}
-                  //value={phone}
+                  onChangeText={password => writePassword( password )}
+                  value={password}
                   secureTextEntry={true}
                   
                   style={{ color: "#003052", fontSize:15, textAlign:'right' , 
@@ -171,7 +199,7 @@ export default function Login({setfooter,navigation}) {
                     backgroundColor: "#003052",
                     borderRadius: 8
                   }}
-                  onPress={() => dispatch(userlogin("01010342753", "20120027"))}
+                  onPress={validate}
                   //disabled={disabled || !phone || !password}
                 >
                   <View

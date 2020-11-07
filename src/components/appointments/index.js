@@ -1,6 +1,8 @@
 import React ,{useState}from "react";
 import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity} from "react-native";
 import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Thumbnail , Header, Left, Body, Right, Title, CardItem, Card} from "native-base";
+import { shallowEqual, useSelector } from 'react-redux'
+
 import Footers from '../Footers';
 import Headers from './Headers';
 import AppointmentsNew from "./AppointmentsNew";
@@ -11,8 +13,8 @@ import AppointmentsOld from "./AppointmentsOld";
 
 export default function Appointments({setfooter, navigation}) {   
 
-  setfooter(true);
-  
+  const user = useSelector(state => state.user);
+
   const [tabNew, setTabNew] = useState(true); // true doctor false clincics
   const [tabOld, setTabOld] = useState(false); // true doctor false clincics
 
@@ -20,12 +22,12 @@ export default function Appointments({setfooter, navigation}) {
       <Container style={{backgroundColor:'#003052'}}>
         <StatusBar backgroundColor="#003052" />
         
-        <Headers title="مواعيدي" />
+        <Headers title="مواعيدي" navigation={navigation}/>
 
         <View style={{
-      flexDirection:'row',
+        flexDirection:'row',
         alignItems:'center'
-    }}>
+        }}>
 
       <TouchableOpacity style={{flex:1,}} onPress={()=>{
         setTabNew(true),setTabOld(false)
@@ -70,8 +72,8 @@ export default function Appointments({setfooter, navigation}) {
 
         <Content contentContainerStyle={{ flexGrow: 1 }}>
 
-        {tabNew?<AppointmentsNew />:null}
-        {tabOld?<AppointmentsOld />:null}
+        {tabNew?<AppointmentsNew patientId={user.userID}/>:null}
+        {tabOld?<AppointmentsOld patientId={user.userID} />:null}
         
         </Content>
 

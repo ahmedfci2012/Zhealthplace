@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity} from "react-native";
 import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Thumbnail , Header, Left, Body, Right, Title, CardItem, Card} from "native-base";
 
@@ -7,18 +7,23 @@ const { width, height } = Dimensions.get("window");
 
 export default function Footers({navigation}) {  
     
-    
+    const [tab, setTab] = useState(1);
+
     const search = ()=>{
+      setTab(1);
       navigation.navigate('Specialization');
     }
     const profile = ()=>{
       navigation.navigate('Personal');
+      setTab(3);
     }
     const appointments = ()=>{
       navigation.navigate('Appointments');
+      setTab(2);
     }
     const specialization = ()=>{
       navigation.navigate('Specialization');
+      setTab(4);
     }
 
     return (
@@ -35,7 +40,7 @@ export default function Footers({navigation}) {
                   <Icon 
                     type="MaterialIcons"
                     name="search"
-                    style={{color:'#FFF'}}
+                    style={{color:tab==1?'#458E21':'#FFF'}}
                   />
                 </View>
               </TouchableOpacity>
@@ -48,7 +53,7 @@ export default function Footers({navigation}) {
                   type="MaterialCommunityIcons"
                   name="calendar-month"
                   style={{ 
-                    color:'#FFF',
+                     color:tab==2?'#458E21':'#FFF'
                   }}
                   />
                   </View>
@@ -90,14 +95,14 @@ export default function Footers({navigation}) {
                 <Icon 
                   type="MaterialIcons"
                   name="person"
-                  style={{color:'#FFF'}}
+                  style={{color:tab==3?'#458E21':'#FFF'}}
                 />
               </View>
 
             </TouchableOpacity>
             <TouchableOpacity style={{ justifyContent:'center', alignContent:'center'}} onPress={specialization}>
                 <View style={{ justifyContent:'center', alignContent:'center'}}>
-                <Icon type="FontAwesome" name="sliders" style={{  color:'#FFF', }}  />
+                <Icon type="FontAwesome" name="sliders" style={{  color:tab==4?'#458E21':'#FFF' }}  />
               </View>
             </TouchableOpacity>      
            </View>

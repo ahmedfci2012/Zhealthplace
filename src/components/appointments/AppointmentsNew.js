@@ -4,16 +4,16 @@ import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Thumb
 import LoadingComponent from '../LoadingComponent';
 import useFetch from "react-fetch-hook";
 import moment from "moment";
-const URLActive="https://medicalapp-api.azurewebsites.net/api/Visit/GetPatinetActiveVisits/2";
 
 const { width, height } = Dimensions.get("window");
 
 
-export default function AppointmentsNew() {   
+export default function AppointmentsNew({patientId}) {   
     
-  const { isLoading, data } = useFetch( URLActive);
+  const URLActive="https://medicalapp-api.azurewebsites.net/api/Visit/GetPatinetActiveVisits/"+patientId;
 
-
+  const { isLoading, data } = useFetch( URLActive );
+   
   return (
 
       <View style={{
