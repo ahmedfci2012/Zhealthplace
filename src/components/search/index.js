@@ -149,11 +149,11 @@ export default function Search({  setfooter, navigation,route}) {
         {doctorCheck ?<Doctors navigation = {navigation}   searchTerm= { searchTerm } specialization ={specialization} specialId={specializationId}/>:null}
         </View> 
         :
-     <View style={{flexGrow:1,}}>
-      {clinicCheck? <Clinics navigation = {navigation} searchTerm={""} specialization ={specialization} specialId={specializationId}/>:null}
-      {doctorCheck? <Doctors navigation = {navigation} searchTerm= {""} specialization ={specialization} specialId={specializationId}/>:null}
-      </View>
-      }
+        <View style={{flexGrow:1,}}>
+          {clinicCheck? <Clinics navigation = {navigation} searchTerm={""} specialization ={specialization} specialId={specializationId}/>:null}
+          {doctorCheck? <Doctors navigation = {navigation} searchTerm= {""} specialization ={specialization} specialId={specializationId}/>:null}
+          </View>
+        }
 
 
        

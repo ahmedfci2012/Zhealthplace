@@ -9,6 +9,7 @@ const LOGOUT = 'LOGOUT';
 const user = (state = 
   {
     userID:null,
+    patientID:null,
     mobile: null ,
     lastName: null,
     firstName:null,
@@ -22,6 +23,7 @@ const user = (state =
       return {
         ...state,
         userID:action.data.userID,
+        patientID:action.data.patientID,
         mobile:action.data.mobile,
         email:action.data.email,
         lastName: action.data.lastName,
@@ -31,6 +33,7 @@ const user = (state =
       return {
         ...state,
         userID:null,
+        patientID:null,
         mobile: null ,
         lastName: null,
         firstName:null,

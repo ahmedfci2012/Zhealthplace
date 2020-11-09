@@ -6,11 +6,12 @@ const { width, height } = Dimensions.get("window");
  
 
 
-export default function MainImage() {   
+export default function MainImage({imageUrl}) {   
     return (
 
 <ImageBackground
-        source={require('../assets/book.png')}
+
+        source={{ uri:imageUrl}}
         style={{
           width:"100%",
           height:384,

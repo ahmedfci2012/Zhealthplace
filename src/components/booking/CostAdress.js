@@ -6,7 +6,7 @@ import { Rating, AirbnbRating } from 'react-native-ratings';
 const { width, height } = Dimensions.get("window");
 
 
-export default function CostAdress() {   
+export default function CostAdress({consultationPrice , city, country, street}) {   
     return (
 
       <View style={{
@@ -25,7 +25,7 @@ export default function CostAdress() {
         <View style={{  flexDirection:'row', alignItems:'center',justifyContent:'flex-end', width:'100%', paddingTop:15, paddingLeft:15, paddingRight:15}}>
                
               <View style={{   marginRight:10, paddingLeft:5,}}>
-                <Text style={{ color:'#003052', fontWeight:'bold', fontSize:14}}>سعر الكشف ٢٠٠ جنية </Text>
+                <Text style={{ color:'#003052', fontWeight:'bold', fontSize:14}}>سعر الكشف {consultationPrice} جنية </Text>
               </View>
               <View style={{}}>
                 <Icon type="MaterialCommunityIcons" name="credit-card-outline" style={{ fontSize:20, color:'#458E21'}} />
@@ -46,7 +46,8 @@ export default function CostAdress() {
 
               <View style={{ flex:1, marginRight:10, paddingLeft:5,}}>
                 <Text style={{ color:'#003052', fontWeight:'600', fontSize:14}} >  
-                ش الهرم أمام رنين .مشعل.الاهرام بلازا                </Text>
+                 {street?street.replace(/(\r\n|\n|\r)/gm, ""):''} {city?city.replace(/(\r\n|\n|\r)/gm, ""):''} {country?country.replace(/(\r\n|\n|\r)/gm, ""):''}
+                </Text>
               </View> 
               <View>
                 <Icon type="MaterialCommunityIcons" name="map-marker" style={{ fontSize:20, color:'#458E21'}} />

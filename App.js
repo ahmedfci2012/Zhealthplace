@@ -26,6 +26,7 @@ import Specialization from './src/components/specializations';
 import Search from './src/components/search';
 import Booking from './src/components/booking';
 import Verify from './src/components/verify';
+import DoctorsInClinic from './src/components/doctors';
 
 import Footers from './src/components/Footers';
 
@@ -63,6 +64,14 @@ export default function App() {
         <PersistGate loading={null} persistor={persistor}>
           <NavigationContainer ref={navigation}>
       <Stack.Navigator>
+      <Stack.Screen name="Login" 
+         options={{
+          headerShown:false
+        }}
+       >
+         {props=> <Login  {...props}  setfooter={setfooter}/>}
+        </Stack.Screen>
+
       <Stack.Screen name="Splash"  
          options={{
           headerShown:false
@@ -71,13 +80,7 @@ export default function App() {
         {props=> <Splash  {...props}  setfooter={setfooter}/>}
         </Stack.Screen>
 
-      <Stack.Screen name="Login" 
-         options={{
-          headerShown:false
-        }}
-       >
-         {props=> <Login  {...props}  setfooter={setfooter}/>}
-        </Stack.Screen>
+      
 
 
       <Stack.Screen name="Register"  
@@ -88,6 +91,14 @@ export default function App() {
           {props=> <Register  {...props}  setfooter={setfooter}/>}
         </Stack.Screen>
 
+        
+        <Stack.Screen name="DoctorsInClinic"  
+         options={{
+          headerShown:false
+        }}
+        >
+          {props=> <DoctorsInClinic  {...props}  setfooter={setfooter}/>}
+        </Stack.Screen>
 
 
       <Stack.Screen name="Verify"  

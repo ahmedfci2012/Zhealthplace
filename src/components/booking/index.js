@@ -5,6 +5,7 @@ import CalendarStrip from "react-native-calendar-strip";
 import moment from "moment";
 import useFetch from "react-fetch-hook";
 import axios from 'react-native-axios';
+import { shallowEqual, useSelector } from 'react-redux'
 
 import MainImage from './MainImage';
 import Data from "./Data";
@@ -18,11 +19,13 @@ const { width, height } = Dimensions.get("window");
 const URLAviliable = "https://medicalapp-api.azurewebsites.net/api/Physician/GetTimeSlotsOnSpecificDate?";
 const TODAY = new Date(); 
 export default function Booking({ route, setfooter, navigation }) {   
- 
+  const user = useSelector(state => state.user);
   const [tabClinic1, setTabClinic1] = useState(true); // true doctor false clincics
   const [tabClinic2, setTabClinic2] = useState(false); // true doctor false clincics
 
   const { item,clinicId  } = route.params;
+
+  //console.log("user", user);
   // const times = useFetch(URL+item.systemUserID);  
    
   // const clinicID = 1;
@@ -52,7 +55,7 @@ export default function Booking({ route, setfooter, navigation }) {
   const confirm=()=>{
      
     let PatientVisitInputDto =   {
-    "patientID": 2,
+    "patientID": user.patientID,
     "clinicID": clinicId,
     "physicianID": physicianId, 
     "visitDateTime": moment(selectedDate).format("YYYY-MM-DDT"+selectedTime)+":00.000Z",
@@ -60,6 +63,7 @@ export default function Booking({ route, setfooter, navigation }) {
     "comment": comment
     }
      
+    console.log(PatientVisitInputDto);
   axios.post('https://medicalapp-api.azurewebsites.net/api/Patient/BookVisit/', {
     ...PatientVisitInputDto
   })
@@ -69,7 +73,7 @@ export default function Booking({ route, setfooter, navigation }) {
     //   message: "Successfully Booking at "+moment(selectedDate).format('dddd YYYY-MM-DD'),
     //   type: "success",
     // });
-   
+    console.log(response);
     navigation.navigate('Specialization');
   
   })
@@ -83,9 +87,9 @@ export default function Booking({ route, setfooter, navigation }) {
          
       <Content contentContainerStyle={{ flexGrow: 1, paddingBottom:100}}>
 
-          <MainImage />
+          <MainImage imageUrl={item.imageUrl}/>
 
-          <Data  />
+          <Data  firstName= {item.systemUser.firstName} lastName= {item.systemUser.lastName} description={item.description} />
           <Statistic />
           
           <ChooseClinic 
@@ -229,7 +233,7 @@ export default function Booking({ route, setfooter, navigation }) {
      </View>
     }
 
-<CostAdress />
+<CostAdress  consultationPrice={item.consultationPrice} street={item.systemUser.street} city={item.systemUser.city} country={item.systemUser.country}/>
 
 <Notes confirm ={confirm} setComment={setComment} comment={comment}/>
 

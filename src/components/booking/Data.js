@@ -6,7 +6,7 @@ import { Rating, AirbnbRating } from 'react-native-ratings';
 const { width, height } = Dimensions.get("window");
 
 
-export default function Data() {   
+export default function Data({firstName, lastName, description}) {   
     return (
 
       <View style={{
@@ -25,10 +25,10 @@ export default function Data() {
         <View style={{  flexDirection:'row', alignItems:'center',justifyContent:'flex-end', width:'100%', paddingTop:15, paddingLeft:15, paddingRight:15}}>
               <View>
               <View style={{   marginRight:10, paddingLeft:5,}}>
-                <Text style={{ color:'#003052', fontWeight:'bold', fontSize:14}}>دكتور محمد مصطفى كامل </Text>
+                <Text style={{ color:'#003052', fontWeight:'bold', fontSize:14}}>دكتور {firstName.replace(/(\r\n|\n|\r)/gm, "")} {lastName.replace(/(\r\n|\n|\r)/gm, "")} </Text>
               </View> 
               <View style={{   marginRight:10, paddingLeft:5,}}>
-              <Text style={{ color:'#A8A8A8',fontWeight:'600' ,fontSize:10}}>أخصائي طب و جراحة الفم و الاسنان</Text>
+              <Text style={{ color:'#A8A8A8',fontWeight:'600' ,fontSize:10}}>أخصائي طب و استشاري و عضو في المستشفي</Text>
               </View>
               </View>
               <View style={{}}>
@@ -40,7 +40,7 @@ export default function Data() {
         <View style={{  flexDirection:'row',justifyContent:'flex-end', width:'100%',  padding:15}}>
               <View style={{ flex:1, marginRight:10, paddingLeft:5,}}>
                 <Text style={{ color:'#003052', fontWeight:'600', fontSize:12}} >  
-                دكتور اسنان متخصص في تجميل اسنان، حشو وعلاج الجذور والاعصاب، تقويم اسنان، تركيبات اسنان، اسنان مسنين، اشعة الاسنان، زراعة اسنان و اسنان بالغين
+                  {description.replace(/(\r\n|\n|\r)/gm, "")}
                 </Text>
               </View> 
               <View>

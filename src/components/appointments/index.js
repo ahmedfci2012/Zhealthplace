@@ -1,10 +1,16 @@
-import React ,{useState}from "react";
-import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity} from "react-native";
+import React ,{useState, useEffect}from "react";
+import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity, NativeEventEmitter, ToastAndroid} from "react-native";
 import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Thumbnail , Header, Left, Body, Right, Title, CardItem, Card} from "native-base";
 import { shallowEqual, useSelector } from 'react-redux'
 
-import Footers from '../Footers';
+import useAsyncEffect from 'use-async-effect';
+import QB from 'quickblox-react-native-sdk'
 import Headers from './Headers';
+import quickBloxSettings from './QBConfig';
+import { requestPermission } from './utils';
+import ChatList from "./ChatList";
+import Rinning from "./Rinning";
+import CallScreen from './CallScreen';
 import AppointmentsNew from "./AppointmentsNew";
 import AppointmentsOld from "./AppointmentsOld";
 
@@ -17,6 +23,166 @@ export default function Appointments({setfooter, navigation}) {
 
   const [tabNew, setTabNew] = useState(true); // true doctor false clincics
   const [tabOld, setTabOld] = useState(false); // true doctor false clincics
+
+
+
+////////////////////////
+  const [stage, setStage] = useState("LOADING"); // LOADING | LOGIN | SELECT | RING | VIDEO
+  const [item, setItem] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
+  const [userPassword, setUserPassword] = useState("");
+  const [sessionInfo, setSessionInfo] = useState(null);
+////////////////////////
+
+
+  useEffect(() => {
+    console.log("use efect");
+   setImmediate(async () => {
+     await requestPermission('CAMERA');
+     await requestPermission('RECORD_AUDIO');
+     await requestPermission('WRITE_EXTERNAL_STORAGE');
+   })
+
+ }, []);
+
+ useAsyncEffect(async (isMounted) => {
+   console.log("use Async");
+   try {
+     await QB.settings.init(quickBloxSettings);
+     await QB.settings.enableAutoReconnect({ enable: true });
+     // SDK initialized successfully
+    // ToastAndroid.show("SDK initialized successfully", ToastAndroid.LONG);
+     isMounted && setStage("LOGIN");
+   } catch (e) {
+     // Some error occured, look at the exception message for more details
+   //  ToastAndroid.show("Some error occured, look at the exception message for more details", ToastAndroid.LONG);
+     console.log(e);
+   }
+   try {
+     let username="test4";
+     const info = await QB.auth.login({
+       login: username,
+       password: 'quickblox'
+     });
+     console.log("info", info);
+     await QB.chat.connect({
+       userId: info.user.id,
+       password: 'quickblox'
+     })
+    // ToastAndroid.show("LoggedIn successfully", ToastAndroid.LONG)
+     setUserInfo(info);
+     setUserPassword('quickblox');
+     setStage("SELECT");
+   } catch (e) {
+   //  ToastAndroid.show("Error in login", ToastAndroid.LONG)
+     console.log(e);
+   }
+
+ }, async () => {
+   await QB.webrtc.release();
+   if (await QB.chat.isConnected()) {
+     await QB.chat.disconnect();
+   }
+ }, []);
+
+
+ useEffect(() => {
+   //console.log("use efect2");
+   async function eventHandler(event) {
+     const {
+       type, // type of the event (i.e. `@QB/CALL` or `@QB/REJECT`)
+       payload
+     } = event
+     //console.log(userInfo);
+     //console.log("Event", type, R.path(['user', 'login'], userInfo));
+     //console.log("pppppppppppp",payload);
+   }
+
+   const emitter = new NativeEventEmitter(QB.webrtc);
+   const listners = [];
+   
+   Object.keys(QB.webrtc.EVENT_TYPE).forEach(key => {
+     listners.push(emitter.addListener(QB.webrtc.EVENT_TYPE[key], eventHandler))
+   })
+   
+   Object.keys(QB.chat.EVENT_TYPE).forEach(key => {
+     listners.push(emitter.addListener(QB.chat.EVENT_TYPE[key], eventHandler))
+   });
+   return () => listners.forEach(listner => listner.remove());
+ }, [userInfo])
+
+
+ const videoWith = (userId) => async () => {
+  try {
+      
+      const params = {
+        opponentsIds: [userId],
+        type: QB.webrtc.RTC_SESSION_TYPE.VIDEO
+      }
+
+      const session = await QB.webrtc.call(params);
+      console.log(session);
+      setSessionInfo({
+        id: session.id,
+        userId
+      });
+      setStage('VIDEO');
+    } catch (error) {
+      ToastAndroid.show("Error in video chat", ToastAndroid.LONG)
+      console.log(error);
+    }
+
+
+  }
+  
+  if (stage === "SELECT" && userInfo && item ) {
+    return (
+      <ChatList
+        setStage={setStage}
+        item={item}
+        userInfo={userInfo}
+        videoWith={videoWith}
+        onGetCall={session => {
+          setSessionInfo({
+            id: session.id,
+            userId: session.initiatorId
+          });
+          setStage('RING');
+        }}
+      />
+    );
+  }
+
+  if (stage === "RING" && sessionInfo && userInfo) {
+    return <Rinning
+      sessionInfo={sessionInfo}
+      userInfo={userInfo}
+      onAccept={() => {
+        setStage('VIDEO');
+      }}
+      onReject={() => {
+        setSessionInfo(null);
+        setStage('SELECT');
+      }}
+      onCallEnd={() => {
+        setSessionInfo(null);
+        setStage('SELECT');
+      }}
+    />
+
+  }
+  
+  if (stage === "VIDEO" && sessionInfo && userInfo) {
+    return <CallScreen
+      sessionInfo={sessionInfo}
+      userInfo={userInfo}
+      onCallEnd={() => {
+        setSessionInfo(null);
+        setStage('SELECT');
+      }}
+    />
+
+}
 
     return (
       <Container style={{backgroundColor:'#003052'}}>
@@ -72,8 +238,8 @@ export default function Appointments({setfooter, navigation}) {
 
         <Content contentContainerStyle={{ flexGrow: 1 }}>
 
-        {tabNew?<AppointmentsNew patientId={user.userID}/>:null}
-        {tabOld?<AppointmentsOld patientId={user.userID} />:null}
+        {tabNew?<AppointmentsNew patientId={ user.patientID} setItem={setItem} setStage={setStage}/>:null}
+        {tabOld?<AppointmentsOld patientId={user.patientID} setItem={setItem} setStage={setStage}/>:null}
         
         </Content>
 

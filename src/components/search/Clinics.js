@@ -10,7 +10,7 @@ import useFetch from "react-fetch-hook";
 
 const { width, height } = Dimensions.get("window");
 
-export default function Clinics({navigation ,searchTerm, specialId}) {   
+export default function Clinics({navigation ,searchTerm, specialId, specialization}) {   
    
 const URLClinics = "https://medicalapp-api.azurewebsites.net/api/Clinic/GetClinicsBySpecialisations/"+specialId;
 const URLClinicsSearch = "https://medicalapp-api.azurewebsites.net/api/Clinic/GetClinicsBySpecialisationAndName?specialisationID="+specialId+"&name="+searchTerm;
@@ -35,7 +35,10 @@ const { isLoading, data } = useFetch( searchTerm?URLClinicsSearch :URLClinics);
         :
         <View>
         {data.map( (item, index) =>
-          <View style={{
+         <TouchableOpacity key={index}
+         onPress={() => navigation.navigate('DoctorsInClinic', { clinicId: item.id , specialization:specialization})}
+        >
+         <View style={{
             //flex:1,
             flexDirection:'row',
             marginTop:15, 
@@ -43,7 +46,7 @@ const { isLoading, data } = useFetch( searchTerm?URLClinicsSearch :URLClinics);
             borderRadius:10,
             paddingBottom:3,
             borderColor:'#70707080',
-          }}  key={index}>
+          }}  >
 
 
          <View style={{
@@ -108,7 +111,8 @@ const { isLoading, data } = useFetch( searchTerm?URLClinicsSearch :URLClinics);
             />
         </View>
       </View>
-      )} 
+     </TouchableOpacity>
+     )} 
       </View>
 }
       </View>

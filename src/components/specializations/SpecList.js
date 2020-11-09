@@ -58,6 +58,7 @@ export default function SpecList({navigation, searchTerm}) {
                    <Image
                       source={{ uri: item.iconUrl}} 
                       style={{ width:25, height:25}}
+                      resizeMode="contain"
                    />
 
                 </Item> 
