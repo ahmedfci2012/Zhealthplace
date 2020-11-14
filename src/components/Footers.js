@@ -5,25 +5,25 @@ import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Thumb
 const { width, height } = Dimensions.get("window");
  
 
-export default function Footers({navigation}) {  
+export default function Footers({navigation, tab}) {  
     
-    const [tab, setTab] = useState(1);
+   // const [tab, setTab] = useState(tab);
 
     const search = ()=>{
-      setTab(1);
+      //setTab(1);
       navigation.navigate('Specialization');
     }
     const profile = ()=>{
       navigation.navigate('Personal');
-      setTab(3);
+      //setTab(3);
     }
     const appointments = ()=>{
       navigation.navigate('Appointments');
-      setTab(2);
+      //setTab(2);
     }
     const specialization = ()=>{
       navigation.navigate('Specialization');
-      setTab(4);
+      //setTab(4);
     }
 
     return (

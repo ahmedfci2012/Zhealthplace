@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity} from "react-native";
-import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Picker, DatePicker } from "native-base";
+import { View, Image, ImageBackground, StatusBar, Dimensions , ScrollView, TouchableOpacity, FlatList,Modal, TouchableWithoutFeedback} from "react-native";
+import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Picker, DatePicker, List,ListItem, Left,Right ,Body } from "native-base";
 import DateTimePicker from '@react-native-community/datetimepicker';
-
 import axios from 'react-native-axios';
+import _countries from "../countries";
+import countryFlag from "../countryFlags";
 
  const { width, height } = Dimensions.get("window");
- //console.log(width);
+ const R = require("ramda");
 
-export default function Register({navigation, setfooter}) { 
+ const countries = R.sortBy(c => c.name.common, _countries);
+ 
+ const getCounryCode = cca2 => {
+   const country = countries.find(country => country.cca2 === cca2);
+   return R.path(["callingCode", 0], country) || "";
+ };
+
+export default function Register({navigation}) { 
   
      
      
@@ -17,17 +25,36 @@ export default function Register({navigation, setfooter}) {
     const [email, setEmail] = useState("");
     const [mobile, setMobile] = useState("");
     const [password, setPassword] = useState("");
+    const [confimpassword, setConfirmPassword]=useState("");
     const [gender, chooseGenger] = useState("id1");
     const [birthOfDate, setBirthOfDate] = useState("");
     
+    const [cca2, setCca2] = useState("EG");
+    const [callingCode, setCallingCode] = useState( getCounryCode(cca2) );
+    const [modalVisible, setModalVisible] = useState(false);
+    const [searchText, setSearchText] = useState("");
+   
+    //console.log("+"+callingCode+" "+mobile);
+
     const [validateMessage, setValidateMessage] = useState("انشاء حساب");
   
     //console.log(fname,lname, email,mobile, password, gender, birthOfDate);
 
+    const selectCountry = (item) =>{
+      setModalVisible(false);
+      const { callingCode, cca2 } = item;
+      setCallingCode(callingCode[0]);
+      setCca2(cca2)
+
+    }
+
+
     const validate = ()=>{
       
-      if ( !fname ||!lname || !email || !mobile || !password  || !birthOfDate){
+      if ( !fname ||!lname || !email || !mobile || !password || !confimpassword  || !birthOfDate){
         setValidateMessage(" يجب ادخال البيانات بشكل صحيح!")
+      } else if ( password !== confimpassword  ){
+        setValidateMessage(" خطء في تاكيد الرقم السري")
       } 
       else {
         setValidateMessage('انشاء حساب');
@@ -47,7 +74,7 @@ export default function Register({navigation, setfooter}) {
         "dateOfBirth": birthOfDate,
         "gender": gender=="id1"?"1":"2",
         "homePhone": mobile,
-        "mobilePhone": mobile,
+        "mobilePhone": "+"+callingCode+" "+mobile,
         "emailAddress": email,
         }
 
@@ -238,12 +265,68 @@ export default function Register({navigation, setfooter}) {
 
              
 
+              <View style={{
+                flex:1,
+                flexDirection:'row',
+              }}>
+
+            <View style={{
+                flex:.5,
+                flexDirection:'row',
+                alignItems:'flex-end',
+                justifyContent:"center",
+                marginBottom:8 
+              }}>
+             <TouchableOpacity
+              style={{ flex:1, flexDirection: "row"}}
+              onPress={() => setModalVisible(true)}
+            >
+          <Image
+            style={{ width: 18, height: 15, marginTop: 5 }}
+            source={{ uri: countryFlag[cca2] }}
+            resizeMode="contain"
+          />
+          <Text
+            style={{
+              color: "#000",
+              fontSize: 16,
+              paddingLeft: 5,
+              paddingRight: 5
+            }}
+          >
+            +{callingCode}
+          </Text>
+
+          <Icon
+            name="md-arrow-dropdown"
+            type="Ionicons"
+            style={{
+              fontSize: 14,
+              color: "#000",
+              paddingTop: 5,
+              width: 14,
+              marginRight:6
+            }}
+          />
+
+        </TouchableOpacity>
+
+              </View>
+
+             <View style={{
+                flex:1
+              }}>
               <Item floatingLabel
-                style={{ borderColor:'#003052' , marginTop:15,}}
+                style={{ borderColor:'#003052' , marginTop:15
+                
+              }}
               >
                 
-                <Label style={{marginRight:30, color:'#458E21', fontSize:12}}>رقم الهاتف</Label>
-                <Icon
+                <Label style={{marginRight:30, color:'#458E21', fontSize:12}}>
+                   رقم الهاتف
+    
+            </Label>
+              <Icon
                  type="AntDesign"
                  name="mobile1"
                  style={{ 
@@ -251,6 +334,11 @@ export default function Register({navigation, setfooter}) {
                    paddingBottom:8
                  }}
                 />
+ 
+                 
+
+
+                 
                 <Input
                   //placeholder={strings("login.placeholder1")}
                   //placeholderTextColor="#E1E1E180"
@@ -261,43 +349,19 @@ export default function Register({navigation, setfooter}) {
                   onChangeText={mobile => setMobile( mobile )}
                   value={mobile}
                   keyboardType="phone-pad"
-                  style={{ color: "#003052", fontSize:15, textAlign:'right' }}
+                  style={{ width:90, color: "#003052", fontSize:15, textAlign:'right'}}
                   //disabled={disabled}
+                  maxLength={15}
                 />
-              </Item>
-
-              <Item floatingLabel style={{
-                marginTop:15,
-                borderColor:'#003052'
-              }}>
                 
-                <Label style={{marginRight:30, color:'#458E21', fontSize:12}}>كلمة المرور</Label>
-                <Icon
-                 type="FontAwesome5"
-                 name="lock"
-                 style={{ 
-                   color:'#458E21',
-                   paddingBottom:12
-                 }}
-                />
-                <Input
-                  //placeholder={strings("login.placeholder1")}
-                  //placeholderTextColor="#E1E1E180"
-                  returnKeyType="next"
-                  // onSubmitEditing={() => {
-                  //   this.passwordInput._root.focus();
-                  // }}
-                  onChangeText={password => setPassword(password)}
-                  value={password}
-                  secureTextEntry={true}
-                  
-                  style={{ color: "#003052", fontSize:15, textAlign:'right' , 
-                     
-                    }}
-                  //disabled={disabled}
-                />
-              </Item>
 
+                
+         
+              </Item>
+              </View>
+              
+            </View>
+           
 
 
               <Item style={{
@@ -380,6 +444,71 @@ export default function Register({navigation, setfooter}) {
               </View>
 
 
+              <Item floatingLabel style={{
+                marginTop:15,
+                borderColor:'#003052'
+              }}>
+                
+                <Label style={{marginRight:30, color:'#458E21', fontSize:12}}>كلمة المرور</Label>
+                <Icon
+                 type="FontAwesome5"
+                 name="lock"
+                 style={{ 
+                   color:'#458E21',
+                   paddingBottom:12
+                 }}
+                />
+                <Input
+                  //placeholder={strings("login.placeholder1")}
+                  //placeholderTextColor="#E1E1E180"
+                  returnKeyType="next"
+                  // onSubmitEditing={() => {
+                  //   this.passwordInput._root.focus();
+                  // }}
+                  onChangeText={password => setPassword(password)}
+                  value={password}
+                  secureTextEntry={true}
+                  
+                  style={{ color: "#003052", fontSize:15, textAlign:'right' , 
+                     
+                    }}
+                  //disabled={disabled}
+                />
+              </Item>
+
+              <Item floatingLabel style={{
+                marginTop:15,
+                borderColor:'#003052'
+              }}>
+                
+                <Label style={{marginRight:30, color:'#458E21', fontSize:12}}> تاكيد كلمة المرور</Label>
+                <Icon
+                 type="FontAwesome5"
+                 name="lock"
+                 style={{ 
+                   color:'#458E21',
+                   paddingBottom:12
+                 }}
+                />
+                <Input
+                  //placeholder={strings("login.placeholder1")}
+                  //placeholderTextColor="#E1E1E180"
+                  returnKeyType="next"
+                  // onSubmitEditing={() => {
+                  //   this.passwordInput._root.focus();
+                  // }}
+                  onChangeText={confirmpassword => setConfirmPassword(confirmpassword)}
+                  value={confimpassword}
+                  secureTextEntry={true}
+                  
+                  style={{ color: "#003052", fontSize:15, textAlign:'right' , 
+                     
+                    }}
+                  //disabled={disabled}
+                />
+              </Item>
+
+
 
               <View
                 style={{
@@ -431,10 +560,112 @@ export default function Register({navigation, setfooter}) {
                    لديك حساب ؟ 
                 </Text>
 
+
+                
               </View>
               </TouchableOpacity>
           </View>
         </View>
+
+
+        <Modal
+              animationType="fade"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => setModalVisible(false)}
+            >
+              <TouchableWithoutFeedback
+                onPress={() => setModalVisible(false)}
+              >
+                <View
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    backgroundColor: "#FFF"
+                  }}
+                />
+              </TouchableWithoutFeedback>
+
+              <View
+                style={{
+                  flex: 1
+                }}
+              >
+                <View
+                  style={{
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    paddingTop:0
+                  }}
+                >
+                  <Item style={{ borderColor: "transparent" }}>
+                    <Icon
+                      name="arrow-back"
+                      type="MaterialIcons"
+                      onPress={() => setModalVisible(false)}
+                       
+                    />
+                    <Input
+                      placeholder="بحث"
+                      value={searchText}
+                      onChangeText={searchText => setSearchText(searchText )}
+                      placeholderTextColor="#00000061"
+                      style={{ fontSize: 16 }}
+                    />
+                    <Icon
+                      name="close"
+                      type="MaterialIcons"
+                      onPress={()=> setSearchText("")}
+                    />
+                  </Item>
+                </View>
+                <List>
+                  <FlatList
+                    data={
+                      searchText
+                        ? countries.filter(c =>
+                            c.name.common
+                              .toLowerCase()
+                              .includes(searchText.toLowerCase())
+                          )
+                        : countries
+                    }
+                    keyExtractor={item => item.cca2}
+                    renderItem={({ item }) => (
+                      <ListItem avatar>
+                        <TouchableOpacity
+                          style={{ flexDirection: "row" }}
+                          onPress={() => selectCountry(item)}
+                        >
+                          <Left>
+                            <Image
+                              style={{ width: 32, height: 20 }}
+                              source={{ uri: countryFlag[item.cca2] }}
+                            />
+                          </Left>
+
+                          <Body>
+                            <Text style={{ fontSize: 16, color: "#000000DE" }}>
+                              {item.name.common}
+                            </Text>
+                          </Body>
+
+                          <Right>
+                            <Text style={{ fontSize: 14, color: "#666666DE" }}>
+                              +{item.callingCode}
+                            </Text>
+                          </Right>
+                        </TouchableOpacity>
+                      </ListItem>
+                    )}
+                  />
+                </List>
+              </View>
+            </Modal>
+          
         </Content>
       </Container>
     );

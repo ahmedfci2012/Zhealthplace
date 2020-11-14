@@ -13,6 +13,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-community/async-storage';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import logger from 'redux-logger';
+import { useSelector } from "react-redux";
 
 import reducer from "./src/reducers";
 
@@ -27,7 +28,6 @@ import Search from './src/components/search';
 import Booking from './src/components/booking';
 import Verify from './src/components/verify';
 import DoctorsInClinic from './src/components/doctors';
-
 import Footers from './src/components/Footers';
 
 //////
@@ -54,136 +54,91 @@ const persistor = persistStore(store);
 const Stack = createStackNavigator();
 
 export default function App() {
- 
-  const [footer, setfooter]= useState(false);
-  const navigation = React.useRef(); 
+//   {
+//   "_persist": {"rehydrated": true, "version": -1},
+//   "user": {"email": null, "firstName": null, "lastName": null, "mobile": null, "patientID": null, "userID": null}
+// }
 
-  return (
+ 
+return (
 
     <Provider store={store}>
+        
+
         <PersistGate loading={null} persistor={persistor}>
-          <NavigationContainer ref={navigation}>
-      <Stack.Navigator>
-      <Stack.Screen name="Login" 
+          <NavigationContainer  >
+        
+         
+         <Stack.Navigator>
+      
+         <Stack.Screen name="Splash"  component={Splash}
          options={{
           headerShown:false
         }}
-       >
-         {props=> <Login  {...props}  setfooter={setfooter}/>}
-        </Stack.Screen>
-
-      <Stack.Screen name="Splash"  
+        />
+         <Stack.Screen name="Register"  component={Register}
          options={{
           headerShown:false
         }}
-        >
-        {props=> <Splash  {...props}  setfooter={setfooter}/>}
-        </Stack.Screen>
+        />
 
       
 
-
-      <Stack.Screen name="Register"  
+      <Stack.Screen name="Login"  component={Login}
          options={{
           headerShown:false
         }}
-        >
-          {props=> <Register  {...props}  setfooter={setfooter}/>}
-        </Stack.Screen>
+       />
 
-        
-        <Stack.Screen name="DoctorsInClinic"  
+      
+
+      
+       <Stack.Screen name="DoctorsInClinic"  component={DoctorsInClinic}
          options={{
           headerShown:false
         }}
-        >
-          {props=> <DoctorsInClinic  {...props}  setfooter={setfooter}/>}
-        </Stack.Screen>
+        />
 
 
-      <Stack.Screen name="Verify"  
+      <Stack.Screen name="Verify"  component={Verify}
          options={{
           headerShown:false
         }}
-        >
-          {props=> <Verify  {...props}  setfooter={setfooter}/>}
-        </Stack.Screen>      
-        
-        
-
+        />
       
-        
-     
-        
-      
-        
-      <Stack.Screen name="Specialization"  
-         options={{
-          headerShown:false
-        }}>
-        {props=> <Specialization  {...props}  setfooter={setfooter}/>}
-        </Stack.Screen>
-        
-      <Stack.Screen name="Search" 
+      <Stack.Screen name="Specialization"  component={Specialization}
          options={{
           headerShown:false
         }}
-        >
-          {props=> <Search  {...props}  setfooter={setfooter}/>}
-           
-        </Stack.Screen>
-
-      
+        />
         
-      
-
-
-      
-      <Stack.Screen name="Appointments"  
+      <Stack.Screen name="Search" component={Search}
          options={{
           headerShown:false
         }}
-        >
-          {props=> <Appointments  {...props}  setfooter={setfooter}/>}
-        </Stack.Screen>
-      
-        
-      <Stack.Screen name="Booking" 
+        />
+
+      <Stack.Screen name="Appointments"  component={Appointments}
          options={{
           headerShown:false
         }}
-        >
-           {props=> <Booking  {...props}  setfooter={setfooter}/>}
-        </Stack.Screen>
-
+        />
       
         
-       
-      
-     
-
-        
-      
-        
-    
-
-      
-
-        <Stack.Screen name="Personal"  
+      <Stack.Screen name="Booking" component={Booking}
          options={{
           headerShown:false
         }}
-        >
-          {props=> <Personal  {...props}  setfooter={setfooter}/>}
-        
-        </Stack.Screen>
-        
-        
+        />
+
+      <Stack.Screen name="Personal"  component={Personal}
+         options={{
+          headerShown:false
+        }}
+        />
         
       </Stack.Navigator>
-     
 
-      {footer? <Footers navigation={navigation.current} />:null}
 
     </NavigationContainer>
         </PersistGate>

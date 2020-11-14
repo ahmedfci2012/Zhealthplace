@@ -6,7 +6,7 @@ import axios from 'react-native-axios';
  const { width, height } = Dimensions.get("window");
  //console.log(width);
 
-export default function Verify({navigation, setfooter, route}) { 
+export default function Verify({navigation, route}) { 
   
     
     const [code , setCode] = useState("");

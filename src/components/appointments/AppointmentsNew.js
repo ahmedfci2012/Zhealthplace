@@ -89,6 +89,7 @@ export default function AppointmentsNew({patientId, setItem,setStage }) {
 
            <TouchableOpacity style={{ height:37,width:'80%',borderRadius:20,backgroundColor: item.call?'#458E21':"#B2B2B2", flexDirection:'row', alignItems:'center',justifyContent:'center', marginTop:5}}
             disabled={false}
+            onPress={ ()=>{setItem("item") , setStage("SELECT")} }
            >
               <View style={{ height:"100%",width:'100%',borderRadius:20,backgroundColor:item.visitStatus=="Booked"?'#458E21':'#B2B2B2', flexDirection:'row', alignItems:'center',justifyContent:'center'}}>
                   <Icon type="SimpleLineIcons" name="phone" style={{ fontSize:20, color:'#FFF'}} />

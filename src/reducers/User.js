@@ -1,5 +1,4 @@
-import { LOGIN } from '../actions';
-const LOGOUT = 'LOGOUT';
+import { LOGIN,LOGOUT,FOOTER  } from '../actions';
 
 /**
  * User Reducer
@@ -13,7 +12,8 @@ const user = (state =
     mobile: null ,
     lastName: null,
     firstName:null,
-    email:null
+    email:null,
+    footer:false
   }
   
   , action) => {
@@ -28,6 +28,7 @@ const user = (state =
         email:action.data.email,
         lastName: action.data.lastName,
         firstName: action.data.firstName,
+        footer:true
       };
     case LOGOUT:
       return {
@@ -37,7 +38,13 @@ const user = (state =
         mobile: null ,
         lastName: null,
         firstName:null,
-        email:null
+        email:null,
+        footer:false
+      };
+      case FOOTER:
+      return {
+        ...state,
+        footer:true
       };
     default:
       return state;

@@ -13,11 +13,12 @@ import Rinning from "./Rinning";
 import CallScreen from './CallScreen';
 import AppointmentsNew from "./AppointmentsNew";
 import AppointmentsOld from "./AppointmentsOld";
+import Footers from "../Footers";
 
  const { width, height } = Dimensions.get("window");
  //console.log(width);
 
-export default function Appointments({setfooter, navigation}) {   
+export default function Appointments({ navigation}) {   
 
   const user = useSelector(state => state.user);
 
@@ -244,7 +245,7 @@ export default function Appointments({setfooter, navigation}) {
         </Content>
 
 
-        {/* <Footers navigation={navigation}/> */}
+        <Footers navigation={navigation} tab={2}/> 
 
       </Container>
     );

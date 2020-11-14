@@ -22,32 +22,14 @@ export default function AppointmentsNew({patientId}) {
         borderColor:'#458E21',
         backgroundColor:'#FFFFFF',
         //alignItems:'center',
-        padding:10
+        padding:10,
+        paddingTop:15
       }}
       >
       {isLoading? <LoadingComponent/>:
         
         <View>
-      <View style={{
-        flexDirection:'row',
-        justifyContent:'flex-end',
-        alignItems:'center'
-      }}>
-          <Text
-          style={{color:'#003052', fontSize:16, fontWeight:"900", marginRight:8}}
-          >
-               8 اكتوبر 2020
-          </Text> 
-            <Icon
-               type="MaterialCommunityIcons"
-               name="calendar-month"
-               style={{ 
-                 color:'#003052',
-               }}
-              />
-             
-      </View>  
-
+       
           {data.map( (item, index) =>
             <Card style={{marginTop:15, borderRadius:10}} key={index}>
             <View style={{
@@ -61,7 +43,7 @@ export default function AppointmentsNew({patientId}) {
                 paddingRight:15,
               }}>
                 <View style={{ flexDirection:'row', alignItems:'center'}}>
-                  <Text style={{ color:'#003052',  fontWeight:'900', marginRight:10}}>{item.clinic}</Text>
+                  <Text style={{ color:'#003052',  fontWeight:'900', marginRight:10}}>{item.clinic.replace(/(\r\n|\n|\r)/gm, "")}</Text>
                   <Icon type="FontAwesome5" name="clinic-medical" style={{ fontSize:20, color:'#003052'}} />
                 </View>
                 <View style={{ flexDirection:'row', alignItems:'center'}}>

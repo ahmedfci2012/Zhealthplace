@@ -18,7 +18,7 @@ const { width, height } = Dimensions.get("window");
 
 const URLAviliable = "https://medicalapp-api.azurewebsites.net/api/Physician/GetTimeSlotsOnSpecificDate?";
 const TODAY = new Date(); 
-export default function Booking({ route, setfooter, navigation }) {   
+export default function Booking({ route,  navigation }) {   
   const user = useSelector(state => state.user);
   const [tabClinic1, setTabClinic1] = useState(true); // true doctor false clincics
   const [tabClinic2, setTabClinic2] = useState(false); // true doctor false clincics

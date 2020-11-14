@@ -7,9 +7,7 @@ import {userlogin} from '../../actions/login';
  const { width, height } = Dimensions.get("window");
  //console.log(width);
 
-export default function Login({setfooter,navigation}) { 
-  
-  setfooter(false);
+export default function Login({navigation}) { 
 
   
   const dispatch = useDispatch();

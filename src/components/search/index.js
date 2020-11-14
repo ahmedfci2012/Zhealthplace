@@ -4,11 +4,12 @@ import { Container, Text, Form, Item, Label, Input, Icon, Content, Button, Thumb
 import Headers from './Headers';
 import Doctors from "./Doctors";
 import Clinics from "./Clinics";
+import Footers from "../Footers";
 
  const { width, height } = Dimensions.get("window");
  //console.log(width);
 
-export default function Search({  setfooter, navigation,route}) {   
+export default function Search({  navigation,route}) {   
     
     const { specialization, specializationId   } = route.params;
     
@@ -160,7 +161,7 @@ export default function Search({  setfooter, navigation,route}) {
       </Content>
 
 
-
+<Footers navigation={navigation} tab={1} />
 
       </Container>
     );

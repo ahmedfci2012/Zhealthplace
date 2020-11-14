@@ -4,17 +4,20 @@ import { Container, Text } from "native-base";
 import { shallowEqual, useSelector } from 'react-redux'
 
  const { width, height } = Dimensions.get("window");
-export default function Splash({navigation, setfooter}) {   
-    
+export default function Splash({navigation}) {   
+ 
 const user = useSelector(state => state.user);
  
 useEffect (()=>{
  
     timeoutHandle = setTimeout(()=>{
       // Add your logic for the transition
-      console.log(user.userID);
+      //console.log(user.userID);
       if(user.userID){navigation.replace("Specialization");}
-      else {navigation.replace("Login");}
+      else {
+        // perform logout 
+        navigation.replace("Login");
+      }
       
  }, 5000);
   })
