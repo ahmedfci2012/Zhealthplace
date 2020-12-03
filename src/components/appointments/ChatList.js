@@ -1,53 +1,64 @@
 import React, { useEffect, useState } from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
   View,
-  ToastAndroid,
   Text,
   Dimensions,
 } from 'react-native';
-import { NativeEventEmitter, Image } from 'react-native';
-import {  Content, Container, Body, Icon , List, ListItem, Left,Thumbnail,Badge, Header, Title, Right, Button} from 'native-base';
-
-
-import moment from "moment";
-
+import {  Content, Container, Icon} from 'native-base';
 import useAsyncEffect from 'use-async-effect';
-
-import QB from 'quickblox-react-native-sdk'
-import WebRTCView from 'quickblox-react-native-sdk/RTCView'
-
-import quickBloxSettings from './QBConfig';
-
-import { requestPermission } from './utils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get("window");
+import { NativeEventEmitter } from 'react-native';
+import QB from 'quickblox-react-native-sdk'
 
-const ChatList = ({ userInfo, videoWith, onGetCall, item,setStage }) => {
+const ChatList = ({  userInfo, videoWith, onGetCall, item,setStage, setNum, num }) => {
 
-  
   useAsyncEffect(async () => {
     await QB.webrtc.init();
-    
   }, []);
 
+
   useEffect(() => {
+    console.log("orig");
     const emitter = new NativeEventEmitter(QB.webrtc)
     const eventListener = emitter.addListener(QB.webrtc.EVENT_TYPE.CALL, 
       async ({ payload: { session } }) => {
-      onGetCall(session);
+       onGetCall(session);
+       console.log("hhhhhhhhhh call onGetCall");
+      //videoWith(119038035);
     });
+    console.log("org2");
     return () => eventListener.remove()
   })
 
+/*
+  useEffect(() => {
+    console.log("hh1111");
+    const timerId = setInterval(() => {
+      console.log('hhhhhhh');
+      if(num==1){
+        x();
+        setNum(2);
+      };
+      clearInterval(timerId);
+    }, 2000)
+    return () => clearInterval(timerId);
+  }, [])
+       
 
-  
+  const x= videoWith(119038035);
+  */
+
+  // if(num==2){
+  //   setStage("LOGIN");
+  //   setNum(3);
+  // }
+
   return (
     
 <Container style={{backgroundColor:'#003052'}}>
+{/* 
 <Content contentContainerStyle={{ flexGrow: 1 }}>
 <View style={{
   height:height*0.33292231,
@@ -108,6 +119,9 @@ const ChatList = ({ userInfo, videoWith, onGetCall, item,setStage }) => {
                 </Text>
               </View>
               </TouchableOpacity>
+         
+        
+        
          </Content>
     </Container>
 
@@ -123,7 +137,22 @@ const ChatList = ({ userInfo, videoWith, onGetCall, item,setStage }) => {
   
   </View>
 </View>
-</Content>
+</Content> */}
+              <Text style={{
+                  fontSize:26,
+                  fontWeight:'bold',
+                  color:'#FFF',
+                  marginTop:height/2,
+                  marginBottom:height/2,
+                  textAlign:'center'
+
+                }}>
+                  { num == 1?
+                'جاري تجهيز المكالمة'  
+                :
+                'تم النتهاء من المكالمة'
+                }
+                </Text>
 </Container>
 
   );

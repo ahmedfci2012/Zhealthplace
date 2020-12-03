@@ -18,11 +18,8 @@ import { Icon, Content} from 'native-base';
  import useAsyncEffect from 'use-async-effect';
 
 import QB from 'quickblox-react-native-sdk'
-import WebRTCView from 'quickblox-react-native-sdk/RTCView'
 
-import quickBloxSettings from './QBConfig';
 
-import { requestPermission } from './utils';
 
 
 import { TouchableOpacity } from 'react-native-gesture-handler';

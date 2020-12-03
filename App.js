@@ -30,6 +30,16 @@ import Verify from './src/components/verify';
 import DoctorsInClinic from './src/components/doctors';
 import Footers from './src/components/Footers';
 
+
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/messaging';
+import PushNotification from 'react-native-push-notification';
+import {Platform, Text} from 'react-native';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
+
+ 
+
 //////
 const persistConfig = {
   key: 'root',
@@ -58,8 +68,38 @@ export default function App() {
 //   "_persist": {"rehydrated": true, "version": -1},
 //   "user": {"email": null, "firstName": null, "lastName": null, "mobile": null, "patientID": null, "userID": null}
 // }
+const [token , setToken]= useState("");
 
- 
+const showNotification = (
+  notification: FirebaseMessagingTypes.Notification
+) => {
+  PushNotification.localNotification({
+    title: notification.title,
+    message: notification.body,
+  });
+};
+useEffect(() => {
+  firebase
+    .messaging()
+    .getToken(firebase.app().options.messagingSenderId)
+    .then(token => setToken(token))
+    .catch(e => console.log(e));
+  firebase.messaging().onMessage(response => {
+    console.log(JSON.stringify(response));
+    if (Platform.OS === 'ios') {
+      PushNotificationIOS.requestPermissions().then(
+        showNotification(response.notification),
+      );
+    } else {
+      showNotification(response.notification);
+    }
+  });
+}, []);
+
+
+console.log(token);
+
+
 return (
 
     <Provider store={store}>
@@ -71,11 +111,19 @@ return (
          
          <Stack.Navigator>
       
+         <Stack.Screen name="Appointments"  component={Appointments}
+         options={{
+          headerShown:false
+        }}
+        />
          <Stack.Screen name="Splash"  component={Splash}
          options={{
           headerShown:false
         }}
         />
+         
+
+        
          <Stack.Screen name="Register"  component={Register}
          options={{
           headerShown:false
@@ -118,11 +166,7 @@ return (
         }}
         />
 
-      <Stack.Screen name="Appointments"  component={Appointments}
-         options={{
-          headerShown:false
-        }}
-        />
+      
       
         
       <Stack.Screen name="Booking" component={Booking}

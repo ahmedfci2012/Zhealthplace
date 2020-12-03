@@ -22,14 +22,16 @@ export default function Appointments({ navigation}) {
 
   const user = useSelector(state => state.user);
 
-  const [tabNew, setTabNew] = useState(true); // true doctor false clincics
+  const [tabNew, setTabNew] = useState(false); // true doctor false clincics
   const [tabOld, setTabOld] = useState(false); // true doctor false clincics
 
 
 
 ////////////////////////
   const [stage, setStage] = useState("LOADING"); // LOADING | LOGIN | SELECT | RING | VIDEO
-  const [item, setItem] = useState(null);
+  const [item, setItem] = useState("item");
+
+  const [num, setNum] = useState(1);
   const [userInfo, setUserInfo] = useState(null);
   const [userPassword, setUserPassword] = useState("");
   const [sessionInfo, setSessionInfo] = useState(null);
@@ -46,13 +48,18 @@ export default function Appointments({ navigation}) {
 
  }, []);
 
+
+
+
+
+
+ // inital and login 
  useAsyncEffect(async (isMounted) => {
-   console.log("use Async");
    try {
      await QB.settings.init(quickBloxSettings);
      await QB.settings.enableAutoReconnect({ enable: true });
      // SDK initialized successfully
-    // ToastAndroid.show("SDK initialized successfully", ToastAndroid.LONG);
+     ToastAndroid.show("SDK initialized successfully", ToastAndroid.LONG);
      isMounted && setStage("LOGIN");
    } catch (e) {
      // Some error occured, look at the exception message for more details
@@ -60,25 +67,26 @@ export default function Appointments({ navigation}) {
      console.log(e);
    }
    try {
-     let username="test4";
+    
+    // login as patient === test 4 
      const info = await QB.auth.login({
-       login: username,
+       login: "test4",
        password: 'quickblox'
      });
-     console.log("info", info);
+     console.log("info ==>", info);
      await QB.chat.connect({
        userId: info.user.id,
        password: 'quickblox'
      })
-    // ToastAndroid.show("LoggedIn successfully", ToastAndroid.LONG)
+     ToastAndroid.show("LoggedIn successfully", ToastAndroid.LONG)
      setUserInfo(info);
      setUserPassword('quickblox');
      setStage("SELECT");
+      
    } catch (e) {
-   //  ToastAndroid.show("Error in login", ToastAndroid.LONG)
+     ToastAndroid.show("Error in login", ToastAndroid.LONG)
      console.log(e);
    }
-
  }, async () => {
    await QB.webrtc.release();
    if (await QB.chat.isConnected()) {
@@ -94,14 +102,26 @@ export default function Appointments({ navigation}) {
        type, // type of the event (i.e. `@QB/CALL` or `@QB/REJECT`)
        payload
      } = event
-     //console.log(userInfo);
-     //console.log("Event", type, R.path(['user', 'login'], userInfo));
-     //console.log("pppppppppppp",payload);
+     console.log("pppppppppppp",payload);
    }
 
    const emitter = new NativeEventEmitter(QB.webrtc);
    const listners = [];
-   
+  
+  // added there to remove chatlist
+   QB.webrtc.init();
+   emitter.addListener(QB.webrtc.EVENT_TYPE.CALL, 
+    async ({ payload: { session } }) => {
+     //onGetCall(session);
+     console.log("hhhhhhhhhh call onGetCall");
+     setSessionInfo({
+      id: session.id,
+      userId: session.initiatorId
+    });
+    console.log("onget call");
+    setStage('RING');
+  });
+ ///
    Object.keys(QB.webrtc.EVENT_TYPE).forEach(key => {
      listners.push(emitter.addListener(QB.webrtc.EVENT_TYPE[key], eventHandler))
    })
@@ -113,14 +133,21 @@ export default function Appointments({ navigation}) {
  }, [userInfo])
 
 
+
+
+
+
+
+
+
+ 
  const videoWith = (userId) => async () => {
+  console.log("aaaaa");
   try {
-      
       const params = {
         opponentsIds: [userId],
         type: QB.webrtc.RTC_SESSION_TYPE.VIDEO
       }
-
       const session = await QB.webrtc.call(params);
       console.log(session);
       setSessionInfo({
@@ -132,29 +159,37 @@ export default function Appointments({ navigation}) {
       ToastAndroid.show("Error in video chat", ToastAndroid.LONG)
       console.log(error);
     }
-
-
   }
   
-  if (stage === "SELECT" && userInfo && item ) {
-    return (
-      <ChatList
-        setStage={setStage}
-        item={item}
-        userInfo={userInfo}
-        videoWith={videoWith}
-        onGetCall={session => {
-          setSessionInfo({
-            id: session.id,
-            userId: session.initiatorId
-          });
-          setStage('RING');
-        }}
-      />
-    );
-  }
 
-  if (stage === "RING" && sessionInfo && userInfo) {
+
+
+
+  // if (stage === "SELECT"  && userInfo && item  ) {
+  //   return (
+  //     <ChatList
+  //       setStage={setStage}
+  //       item={item}
+  //       num={num}
+  //       setNum={setNum}
+  //       userInfo={userInfo}
+  //       videoWith={videoWith}
+         
+  //       onGetCall={session => {
+  //         setSessionInfo({
+  //           id: session.id,
+  //           userId: session.initiatorId
+  //         });
+  //         console.log("onget call");
+  //         setStage('RING');
+  //       }}
+  //     />
+  //   );
+  // }
+
+
+
+  if ( stage === "RING" && sessionInfo && userInfo) {
     return <Rinning
       sessionInfo={sessionInfo}
       userInfo={userInfo}
@@ -173,8 +208,12 @@ export default function Appointments({ navigation}) {
 
   }
   
+
+
+
   if (stage === "VIDEO" && sessionInfo && userInfo) {
     return <CallScreen
+    navigation={navigation}
       sessionInfo={sessionInfo}
       userInfo={userInfo}
       onCallEnd={() => {

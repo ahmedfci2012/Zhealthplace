@@ -27,7 +27,7 @@ import { requestPermission } from './utils';
 
 
 
-const CallScreen = ({ sessionInfo, userInfo, onCallEnd }) => {
+const CallScreen = ({ sessionInfo, userInfo, onCallEnd, navigation }) => {
 
   useEffect(() => {
     const emitter = new NativeEventEmitter(QB.webrtc)
@@ -150,10 +150,12 @@ const CallScreen = ({ sessionInfo, userInfo, onCallEnd }) => {
 
   <TouchableOpacity style={{flex:1,  alignItems:'center'}} 
   onPress={async () => {
+    //navigation.navigate("Specialization");
     if (sessionInfo && sessionInfo.id) {
       await QB.webrtc.hangUp({ sessionId: sessionInfo.id });
     }
   }}
+  //onPress={()=>navigation.navigate("Splash")}
   >
        <View style={{
          height:50,
